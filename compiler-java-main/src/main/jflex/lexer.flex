@@ -103,6 +103,8 @@ IntegerConstant = {Digit}+
 
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
+
+  /* Debería agregar todos los retornos de cada Token acá? */
 }
 
 
