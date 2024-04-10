@@ -51,6 +51,8 @@ terminal SWITCH;
 terminal CASE;
 
 // Non Terminals
+non terminal program;
+non terminal block;
 non terminal sentence;
 non terminal assignment;
 non terminal expression;
@@ -58,7 +60,15 @@ non terminal term;
 non terminal factor;
 
 // Start Symbol Definition
-start with sentence;
+//start with sentence;   Cambio el StartSymbol para permitir entradas multilinea
+start with program;
+
+program ::= block  {:
+    System.out.println("End2");
+ :};
+
+block ::= block sentence;
+block ::= sentence;
 
 sentence ::= assignment {: System.out.println("End"); :};
 assignment ::= IDENTIFIER ASSIG expression {: System.out.println("Assignment"); :};
