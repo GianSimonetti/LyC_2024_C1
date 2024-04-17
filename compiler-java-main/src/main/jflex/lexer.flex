@@ -78,8 +78,10 @@ Open_Square_Bracket = "["
 Close_Square_Bracket = "]"
 
 WhiteSpace = {LineTerminator} | {Identation}
+Comment = "*-" ~ "-*"
 Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = {Digit}+
+StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
 
 %%
 
@@ -87,10 +89,6 @@ IntegerConstant = {Digit}+
 /* keywords */
 
 <YYINITIAL> {
-  /* identifiers */
-  {Identifier}                             { return symbol(ParserSym.IDENTIFIER, yytext()); }
-  /* Constants */
-  {IntegerConstant}                        { return symbol(ParserSym.INTEGER_CONSTANT, yytext()); }
 
   /* operators */
   {Plus}                                    { return symbol(ParserSym.PLUS); }
@@ -135,8 +133,18 @@ IntegerConstant = {Digit}+
   {Switch}                                  { return symbol(ParserSym.SWITCH); }
   {Case}                                    { return symbol(ParserSym.CASE); }
 
+  {Comment}	                                { /* ignore */ }
+
+  {StringConstant}                          { return symbol(ParserSym.STRING_CONSTANT, yytext()); }
+  /* identifiers */
+  {Identifier}                             { return symbol(ParserSym.IDENTIFIER, yytext()); }
+  /* Constants */
+  {IntegerConstant}                        { return symbol(ParserSym.INTEGER_CONSTANT, yytext()); }
+
+
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
+
 
 }
 
