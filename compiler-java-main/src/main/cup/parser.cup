@@ -15,6 +15,7 @@ terminal OPEN_BRACKET;
 terminal CLOSE_BRACKET;
 terminal INTEGER_CONSTANT;
 terminal STRING_CONSTANT;
+terminal FLOAT_CONSTANT;
 terminal IDENTIFIER;
 terminal HIGHER;
 terminal LOWER;
@@ -29,6 +30,8 @@ terminal DECREMENT;
 terminal TRUE_BOOL;
 terminal FALSE_BOOL;
 terminal COMMA;
+terminal POINT;
+terminal COLON;
 terminal SEMICOLON;
 terminal CLOSE_CURLY_BRACKET;
 terminal OPEN_CURLY_BRACKET;
@@ -62,6 +65,12 @@ non terminal factor;
 non terminal conditional;
 non terminal condition;
 non terminal data;
+non terminal vardeclaration;
+non terminal declarationslist;
+non terminal declaration;
+non terminal varslist;
+non terminal var;
+non terminal vartype;
 
 // Start Symbol Definition
 //start with sentence;   Cambio el StartSymbol para permitir entradas multilinea
@@ -76,6 +85,8 @@ block ::= sentence{: System.out.println("Block"); :};
 
 sentence ::= assignment {: System.out.println("Sentence"); :};
 assignment ::= IDENTIFIER:id ASSIG expression {: System.out.println(id+" = Assignment"); :};
+assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant {: System.out.println(id+" = Constant assignment: " + constant); :};
+assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant {: System.out.println(id+" = Float constant assignment: " + constant); :};
 expression ::= expression PLUS term {: System.out.println("+"); :};
 expression ::= expression SUB term {: System.out.println("-"); :};
 expression ::= term {: System.out.println("Expression = Term"); :};
@@ -90,8 +101,61 @@ sentence ::= ESCRIBIR OPEN_BRACKET data CLOSE_BRACKET {:
     System.out.println("ESCRIBIR:");
 :};
 data ::= INTEGER_CONSTANT:integer_constant{:System.out.println(" integer: " + integer_constant);:};
+data ::= FLOAT_CONSTANT:float_constant{:System.out.println(" integer: " + float_constant);:};
 data ::= STRING_CONSTANT:stringConstant{:System.out.println(" string: " + stringConstant);:};
 data ::= IDENTIFIER:id{:System.out.println(" id: " + id);:};
+
+sentence ::= vardeclaration
+{:
+    System.out.println("Sentencia de declaracion de variables");
+:};
+
+vardeclaration ::= INIT OPEN_CURLY_BRACKET declarationslist CLOSE_CURLY_BRACKET
+{:
+    System.out.println("Declaracion de variables");
+:};
+
+declarationslist ::= declarationslist declaration
+{:
+    System.out.println("Lista de declaraciones");
+:};
+
+declarationslist ::= declaration
+{:
+    System.out.println("Declaracion");
+:};
+
+declaration ::= varslist COLON vartype
+{:
+    System.out.println("Declaracion");
+:};
+
+varslist ::= varslist COMMA var
+{:
+    System.out.println("Lista de variables");
+:};
+
+varslist ::= var
+{:
+    System.out.println("Variable");
+:};
+
+var ::= IDENTIFIER:id {:System.out.println("Variable: " + id);:};
+
+vartype ::= INT
+{:
+    System.out.println("Entero");
+:};
+
+vartype ::= FLOAT
+{:
+    System.out.println("Flotante");
+:};
+
+vartype ::= STRING
+{:
+    System.out.println("Cadena");
+:};
 
 sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
     System.out.println("LEER: " + id);

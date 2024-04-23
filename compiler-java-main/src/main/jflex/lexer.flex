@@ -70,8 +70,10 @@ True_Bool = "true"
 False_Bool = "false"
 Increment = "=+"
 Decrement = "=-"
+Colon = ":"
 Semicolon = ";"
 Comma = ","
+Point = "."
 Open_Curly_Bracket = "{"
 Close_Curly_Bracket = "}"
 Open_Square_Bracket = "["
@@ -82,6 +84,7 @@ Comment = "*-" ~ "-*"
 Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = {Digit}+
 StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
+FloatConstant = ({Digit}*{Point}{Digit}+)|({Digit}+{Point}{Digit}*)
 
 %%
 
@@ -111,8 +114,10 @@ StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
   {False_Bool}                              { return symbol(ParserSym.FALSE_BOOL); }
   {Increment}                               { return symbol(ParserSym.INCREMENT); }
   {Decrement}                               { return symbol(ParserSym.DECREMENT); }
+  {Colon}                                   { return symbol(ParserSym.COLON); }
   {Semicolon}                               { return symbol(ParserSym.SEMICOLON); }
   {Comma}                                   { return symbol(ParserSym.COMMA); }
+  {Point}                                   { return symbol(ParserSym.POINT); }
   {Open_Curly_Bracket}                      { return symbol(ParserSym.OPEN_CURLY_BRACKET); }
   {Close_Curly_Bracket}                     { return symbol(ParserSym.CLOSE_CURLY_BRACKET); }
   {Open_Square_Bracket}                     { return symbol(ParserSym.OPEN_SQUARE_BRACKET); }
@@ -130,6 +135,8 @@ StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
   {String}                                  { return symbol(ParserSym.STRING); }
   {Mientras}                                { return symbol(ParserSym.MIENTRAS); }
   {Int}                                     { return symbol(ParserSym.INT); }
+  {Float}                                   { return symbol(ParserSym.FLOAT); }
+  {String}                                  { return symbol(ParserSym.STRING); }
   {Switch}                                  { return symbol(ParserSym.SWITCH); }
   {Case}                                    { return symbol(ParserSym.CASE); }
 
@@ -137,9 +144,10 @@ StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
 
   {StringConstant}                          { return symbol(ParserSym.STRING_CONSTANT, yytext()); }
   /* identifiers */
-  {Identifier}                             { return symbol(ParserSym.IDENTIFIER, yytext()); }
+  {Identifier}                              { return symbol(ParserSym.IDENTIFIER, yytext()); }
   /* Constants */
-  {IntegerConstant}                        { return symbol(ParserSym.INTEGER_CONSTANT, yytext()); }
+  {IntegerConstant}                         { return symbol(ParserSym.INTEGER_CONSTANT, yytext()); }
+  {FloatConstant}                           { return symbol(ParserSym.FLOAT_CONSTANT, yytext()); }
 
 
   /* whitespace */
