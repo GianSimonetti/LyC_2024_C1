@@ -1,4 +1,5 @@
-b := 5
-z := 1
-C := 3
-ContarPrimos([11,b+8,2,55,z*b+7,C])
+buscar := "hola"
+en := "hola como andas"
+reemplazo := "Buenassss"
+
+buscoYReemplazo(buscar, en, reemplazo);

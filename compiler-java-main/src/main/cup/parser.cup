@@ -39,6 +39,7 @@ terminal OPEN_SQUARE_BRACKET;
 terminal CLOSE_SQUARE_BRACKET;
 
 terminal CONTAR_PRIMOS;
+terminal BUSCO_Y_REEMPLAZO;
 terminal SI;
 terminal SINO;
 terminal FOR;
@@ -203,4 +204,8 @@ sentence ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLO
 :};
 expression_list ::= expression_list COMMA expression {:
     System.out.println("expression_list = expression_list Comma expression");
+:};
+
+sentence ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET factor COMMA factor COMMA factor CLOSE_BRACKET SEMICOLON{:
+    System.out.println("BuscoYReemplazo");
 :};
