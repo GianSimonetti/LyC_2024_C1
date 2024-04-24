@@ -201,4 +201,6 @@ condition ::= factor LOWER_EQUAL factor {:
 sentence ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
     System.out.println("ContarPrimos");
 :};
-expression_list ::= expression_list COMMA expression {: System.out.println("expression_list = expression_list Comma factor"); :};
+expression_list ::= expression_list COMMA expression {:
+    System.out.println("expression_list = expression_list Comma expression");
+:};
