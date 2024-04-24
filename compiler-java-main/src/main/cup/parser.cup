@@ -1,9 +1,22 @@
 package lyc.compiler;
 
 import java_cup.runtime.*;
+import lyc.compiler.symboltable.*;
+import lyc.compiler.symboltable.Symbol;
+import java.util.List;
 
 class Parser;
 
+action code
+{:
+     public SymbolTableManager symbolTableManager = new SymbolTableManager();
+:}
+parser code
+{:
+    public List<Symbol> getSymbolsList() {
+        return action_obj.symbolTableManager.getSymbolsList();
+    }
+:}
 
 // Terminals
 terminal ASSIG;
@@ -94,13 +107,25 @@ term ::= term MULT factor {: System.out.println("*"); :};
 term ::= term DIV factor {: System.out.println("/"); :};
 term ::= factor {: System.out.println("Term = factor"); :};
 factor ::= IDENTIFIER:id  {: System.out.println("Id: " + id); :};
-factor ::= INTEGER_CONSTANT:constant {: System.out.println("Constant: " + constant ); :};
+factor ::= INTEGER_CONSTANT:constant
+{:
+    String strConstant = constant.toString();
+    Integer integer = Integer.valueOf(strConstant);
+    symbolTableManager.addSymbol("_" + strConstant, integer);
+    System.out.println(" integer: " + strConstant);
+:};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 //Agregado de temas comunes
 sentence ::= ESCRIBIR OPEN_BRACKET data CLOSE_BRACKET {:
     System.out.println("ESCRIBIR:");
 :};
-data ::= INTEGER_CONSTANT:integer_constant{:System.out.println(" integer: " + integer_constant);:};
+data ::= INTEGER_CONSTANT:integer_constant
+{:
+    String strConstant = integer_constant.toString();
+    Integer integer = Integer.valueOf(strConstant);
+    symbolTableManager.addSymbol("_" + strConstant, integer);
+    System.out.println(" integer: " + integer_constant);
+:};
 data ::= FLOAT_CONSTANT:float_constant{:System.out.println(" integer: " + float_constant);:};
 data ::= STRING_CONSTANT:stringConstant{:System.out.println(" string: " + stringConstant);:};
 data ::= IDENTIFIER:id{:System.out.println(" id: " + id);:};
