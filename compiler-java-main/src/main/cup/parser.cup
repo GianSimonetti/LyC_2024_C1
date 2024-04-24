@@ -38,6 +38,7 @@ terminal OPEN_CURLY_BRACKET;
 terminal OPEN_SQUARE_BRACKET;
 terminal CLOSE_SQUARE_BRACKET;
 
+terminal CONTAR_PRIMOS;
 terminal SI;
 terminal SINO;
 terminal FOR;
@@ -60,6 +61,7 @@ non terminal block;
 non terminal sentence;
 non terminal assignment;
 non terminal expression;
+non terminal expression_list;
 non terminal term;
 non terminal factor;
 non terminal conditional;
@@ -87,6 +89,7 @@ sentence ::= assignment {: System.out.println("Sentence"); :};
 assignment ::= IDENTIFIER:id ASSIG expression {: System.out.println(id+" = Assignment"); :};
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant {: System.out.println(id+" = Constant assignment: " + constant); :};
 assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant {: System.out.println(id+" = Float constant assignment: " + constant); :};
+expression_list ::= expression {: System.out.println("expression_list = expression"); :};
 expression ::= expression PLUS term {: System.out.println("+"); :};
 expression ::= expression SUB term {: System.out.println("-"); :};
 expression ::= term {: System.out.println("Expression = Term"); :};
@@ -104,61 +107,50 @@ data ::= INTEGER_CONSTANT:integer_constant{:System.out.println(" integer: " + in
 data ::= FLOAT_CONSTANT:float_constant{:System.out.println(" integer: " + float_constant);:};
 data ::= STRING_CONSTANT:stringConstant{:System.out.println(" string: " + stringConstant);:};
 data ::= IDENTIFIER:id{:System.out.println(" id: " + id);:};
+sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
+    System.out.println("LEER: " + id);
+:};
 
 sentence ::= vardeclaration
 {:
     System.out.println("Sentencia de declaracion de variables");
 :};
-
 vardeclaration ::= INIT OPEN_CURLY_BRACKET declarationslist CLOSE_CURLY_BRACKET
 {:
     System.out.println("Declaracion de variables");
 :};
-
 declarationslist ::= declarationslist declaration
 {:
     System.out.println("Lista de declaraciones");
 :};
-
 declarationslist ::= declaration
 {:
     System.out.println("Declaracion");
 :};
-
 declaration ::= varslist COLON vartype
 {:
     System.out.println("Declaracion");
 :};
-
 varslist ::= varslist COMMA var
 {:
     System.out.println("Lista de variables");
 :};
-
 varslist ::= var
 {:
     System.out.println("Variable");
 :};
-
 var ::= IDENTIFIER:id {:System.out.println("Variable: " + id);:};
-
 vartype ::= INT
 {:
     System.out.println("Entero");
 :};
-
 vartype ::= FLOAT
 {:
     System.out.println("Flotante");
 :};
-
 vartype ::= STRING
 {:
     System.out.println("Cadena");
-:};
-
-sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
-    System.out.println("LEER: " + id);
 :};
 
 sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
@@ -189,23 +181,24 @@ conditional ::= OPEN_BRACKET condition CLOSE_BRACKET {:
 condition ::= factor EQUAL factor {:
     System.out.println("condition");
 :};
-
 condition ::= factor DISTINCT factor {:
     System.out.println("condition");
 :};
-
 condition ::= factor HIGHER factor {:
      System.out.println("condition");
 :};
-
 condition ::= factor HIGHER_EQUAL factor {:
     System.out.println("condition");
 :};
-
 condition ::= factor LOWER factor {:
     System.out.println("condition");
 :};
-
 condition ::= factor LOWER_EQUAL factor {:
     System.out.println("condition");
 :};
+
+//Agrego temas especiales
+sentence ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
+    System.out.println("ContarPrimos");
+:};
+expression_list ::= expression_list COMMA expression {: System.out.println("expression_list = expression_list Comma factor"); :};

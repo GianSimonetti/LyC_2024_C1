@@ -43,6 +43,7 @@ CloseBracket = ")"
 Letter = [a-zA-Z]
 Digit = [0-9]
 //Agrego tokens
+ContarPrimos = "ContarPrimos"
 Si = "si"
 Sino = "sino"
 Begin = "begin"
@@ -123,6 +124,7 @@ FloatConstant = ({Digit}*{Point}{Digit}+)|({Digit}+{Point}{Digit}*)
   {Open_Square_Bracket}                     { return symbol(ParserSym.OPEN_SQUARE_BRACKET); }
   {Close_Square_Bracket}                    { return symbol(ParserSym.CLOSE_SQUARE_BRACKET); }
 
+  {ContarPrimos}                            { return symbol(ParserSym.CONTAR_PRIMOS); }
   {Si}                                      { return symbol(ParserSym.SI); }
   {Sino}                                    { return symbol(ParserSym.SINO); }
   {Begin}                                   { return symbol(ParserSym.BEGIN); }
