@@ -22,9 +22,20 @@ public class Symbol {
     public Symbol(String name, String value)
     {
         this.type = DataType.STRING;
-        this.name = name;
-        this.stringValue = value;
-        this.length = value.length();
+        int final_length = 0;
+        String final_name = "_EMPTY_STRING";
+        String final_value = "";
+
+        if(!value.equals("\"\""))
+        {
+            final_value = value.substring(1, value.length() - 1);
+            final_name = "_" + final_value;
+            final_length = final_value.length();
+        }
+
+        this.name = final_name;
+        this.stringValue = final_value;
+        this.length = final_length;
 
         this.intValue = null;
         this.floatValue = null;

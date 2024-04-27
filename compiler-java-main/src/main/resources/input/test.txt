@@ -1,1 +1,9 @@
-x:=2+8 *- Esto es un comentario -*
+s:="Alejo"
+s1:=""
+init {
+    a1, b1 : Float
+    variable1 : Int
+    p1, p2, p3 : String
+}
+f:=.99
+x:=2+8

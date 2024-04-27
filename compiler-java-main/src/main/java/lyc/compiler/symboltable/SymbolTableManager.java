@@ -69,6 +69,15 @@ public class SymbolTableManager {
         }
     }
 
+    public void addVars(ArrayList<String> varsList, DataType type)
+    {
+        varsList.forEach(var ->
+        {
+            this.addSymbol(var, type);
+        });
+        varsList.clear();
+    }
+
     public List<Symbol> getSymbolsList()
     {
         return symbolsList;
