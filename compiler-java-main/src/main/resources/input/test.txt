@@ -7,3 +7,8 @@ init {
 }
 f:=.99
 x:=2+8
+buscar := "hola"
+en := "hola como andas"
+reemplazo := "Buenassss"
+
+buscoYReemplazo(buscar, en, reemplazo);

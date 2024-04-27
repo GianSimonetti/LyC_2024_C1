@@ -53,6 +53,8 @@ terminal OPEN_CURLY_BRACKET;
 terminal OPEN_SQUARE_BRACKET;
 terminal CLOSE_SQUARE_BRACKET;
 
+terminal CONTAR_PRIMOS;
+terminal BUSCO_Y_REEMPLAZO;
 terminal SI;
 terminal SINO;
 terminal FOR;
@@ -75,6 +77,7 @@ non terminal block;
 non terminal sentence;
 non terminal assignment;
 non terminal expression;
+non terminal expression_list;
 non terminal term;
 non terminal factor;
 non terminal conditional;
@@ -113,6 +116,7 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
 :};
+expression_list ::= expression {: System.out.println("expression_list = expression"); :};
 expression ::= expression PLUS term {: System.out.println("+"); :};
 expression ::= expression SUB term {: System.out.println("-"); :};
 expression ::= term {: System.out.println("Expression = Term"); :};
@@ -155,6 +159,9 @@ data ::= STRING_CONSTANT:stringConstant
 data ::= IDENTIFIER:id
 {:
     System.out.println(" id: " + id);
+:};
+sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
+    System.out.println("LEER: " + id);
 :};
 
 sentence ::= vardeclaration
@@ -216,10 +223,6 @@ vartype ::= STRING
     System.out.println("Cadena");
 :};
 
-sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
-    System.out.println("LEER: " + id);
-:};
-
 sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
 {:
     System.out.println("if");
@@ -267,4 +270,16 @@ condition ::= factor LOWER factor {:
 
 condition ::= factor LOWER_EQUAL factor {:
     System.out.println("condition");
+:};
+
+//Agrego temas especiales
+sentence ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
+    System.out.println("ContarPrimos");
+:};
+expression_list ::= expression_list COMMA expression {:
+    System.out.println("expression_list = expression_list Comma expression");
+:};
+
+sentence ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET factor COMMA factor COMMA factor CLOSE_BRACKET SEMICOLON{:
+    System.out.println("BuscoYReemplazo");
 :};
