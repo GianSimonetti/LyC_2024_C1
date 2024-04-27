@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/LyC_2024_C1.iml" filepath="$PROJECT_DIR$/.idea/LyC_2024_C1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/compiler-java-main/compiler.iml" filepath="$PROJECT_DIR$/compiler-java-main/compiler.iml" />
     </modules>
   </component>
 </project>
