@@ -46,7 +46,7 @@ Digit = [0-9]
 //Agrego tokens
 ContarPrimos = "ContarPrimos"
 buscoYReemplazo = "buscoYReemplazo"
-Si = "si"
+Si = "si" | "if"
 Sino = "sino"
 Begin = "begin"
 End = "end"
@@ -56,7 +56,7 @@ Leer = "leer"
 Init = "init"
 Float = "Float"
 String = "String"
-Mientras = "mientras"
+Mientras = "mientras" | "while"
 Int = "Int"
 Switch = "switch"
 Case = "case"
@@ -65,9 +65,9 @@ Higher = ">"
 Lower = "<"
 Higher_Equal = ">="
 Lower_Equal = "<="
-And = "and"
-Or = "or"
-Not = "not"
+And = "and" | "AND"
+Or = "or" | "OR"
+Not = "not" | "NOT"
 Distinct  = "!="
 True_Bool = "true"
 False_Bool = "false"
@@ -86,7 +86,7 @@ WhiteSpace = {LineTerminator} | {Identation}
 Comment = "*-" ~ "-*"
 Identifier = {Letter} ({Letter}|{Digit})*
 IntegerConstant = {Sub}? {Digit}+ | {Digit}+
-StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
+StringConstant =  (\"({Letter}|{IntegerConstant}|" ")*\") | (\“({Letter}|{IntegerConstant}|" ")*\”)
 FloatConstant = {Sub}? ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
 %%
 

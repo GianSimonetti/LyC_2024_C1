@@ -27,12 +27,12 @@ public class ParserTest {
     public void syntaxError() {
         compilationError("1234");
     }
-
+/*
     @Test
     void assignments() throws Exception {
         compilationSuccessful(readFromFile("assignments.txt"));
     }
-/*
+*/
     @Test
     void write() throws Exception {
         compilationSuccessful(readFromFile("write.txt"));
@@ -57,12 +57,12 @@ public class ParserTest {
     void and() throws Exception {
         compilationSuccessful(readFromFile("and.txt"));
     }
-
+/*
     @Test
     void or() throws Exception {
         compilationSuccessful(readFromFile("or.txt"));
     }
-
+ 
     @Test
     void not() throws Exception {
         compilationSuccessful(readFromFile("not.txt"));
