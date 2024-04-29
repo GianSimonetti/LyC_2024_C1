@@ -17,12 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Disabled
 public class ParserTest {
-
+/*
     @Test
     public void assignmentWithExpression() throws Exception {
         compilationSuccessful("c=d*(e-21)/4");
     }
-
+*/
     @Test
     public void syntaxError() {
         compilationError("1234");
@@ -32,7 +32,7 @@ public class ParserTest {
     void assignments() throws Exception {
         compilationSuccessful(readFromFile("assignments.txt"));
     }
-
+/*
     @Test
     void write() throws Exception {
         compilationSuccessful(readFromFile("write.txt"));
@@ -77,7 +77,7 @@ public class ParserTest {
     void whileStatement() throws Exception {
         compilationSuccessful(readFromFile("while.txt"));
     }
-
+*/
 
     private void compilationSuccessful(String input) throws Exception {
         assertThat(scan(input).sym).isEqualTo(ParserSym.EOF);

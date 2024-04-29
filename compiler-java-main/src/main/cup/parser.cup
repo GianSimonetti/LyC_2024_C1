@@ -98,6 +98,8 @@ program ::= block  {:
     System.out.println("Program End");
  :};
 
+//program ::= -1;
+
 block ::= block sentence{: System.out.println("Block Sentence"); :};
 block ::= sentence{: System.out.println("Block"); :};
 

@@ -4,6 +4,7 @@ import java_cup.runtime.Symbol;
 import lyc.compiler.ParserSym;
 import lyc.compiler.model.*;
 import static lyc.compiler.constants.Constants.*;
+import java.math.BigInteger;
 
 %%
 
@@ -84,10 +85,9 @@ Close_Square_Bracket = "]"
 WhiteSpace = {LineTerminator} | {Identation}
 Comment = "*-" ~ "-*"
 Identifier = {Letter} ({Letter}|{Digit})*
-IntegerConstant = {Digit}+
+IntegerConstant = {Sub}? {Digit}+ | {Digit}+
 StringConstant =  \"({Letter}|{IntegerConstant}|" ")*\"
-FloatConstant = ({Digit}*{Point}{Digit}+)|({Digit}+{Point}{Digit}*)
-
+FloatConstant = {Sub}? ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
 %%
 
 
@@ -146,13 +146,58 @@ FloatConstant = ({Digit}*{Point}{Digit}+)|({Digit}+{Point}{Digit}*)
 
   {Comment}	                                { /* ignore */ }
 
-  {StringConstant}                          { return symbol(ParserSym.STRING_CONSTANT, yytext()); }
+  {StringConstant}                          { 
+                                                String stringValue = yytext().substring(1, yytext().length() - 1); // Remueve las comillas
+                                                if (stringValue.length() <= STRING_RANGE) {
+                                                    return symbol(ParserSym.STRING_CONSTANT, stringValue);
+                                                } else {
+                                                    throw new InvalidLengthException("La constante de cadena [" + stringValue + "] excede los " + STRING_RANGE + " caracteres permitidos.");
+                                                } 
+                                            }
   /* identifiers */
-  {Identifier}                              { return symbol(ParserSym.IDENTIFIER, yytext()); }
+  {Identifier}                              { 
+                                                String stringValue = new String(yytext());
+                                                if (stringValue.length() <= MAX_LENGTH) {
+                                                    return symbol(ParserSym.IDENTIFIER, yytext()); 
+                                                } else {
+                                                    throw new InvalidLengthException("La constante de cadena [" + stringValue + "] excede los " + STRING_RANGE + " caracteres permitidos.");
+                                                }
+                                            }
   /* Constants */
-  {IntegerConstant}                         { return symbol(ParserSym.INTEGER_CONSTANT, yytext()); }
-  {FloatConstant}                           { return symbol(ParserSym.FLOAT_CONSTANT, yytext()); }
+  {IntegerConstant}                         { 
+                                                BigInteger intValue = new BigInteger(yytext());
+                                                BigInteger minValue = BigInteger.valueOf(-(1L << (BITS_INT - 1))); // Calcula el valor mínimo permitido
+                                                BigInteger maxValue = BigInteger.valueOf((1L << (BITS_INT - 1)) - 1); // Calcula el valor máximo permitido
 
+                                                if (intValue.compareTo(minValue) >= 0 && intValue.compareTo(maxValue) <= 0) {
+                                                    return symbol(ParserSym.INTEGER_CONSTANT, yytext());
+                                                } else {
+                                                    String errorMessage;
+                                                    if (intValue.compareTo(minValue) < 0) {
+                                                        errorMessage = "La constante [" + yytext() + "] esta por debajo del limite de los enteros.";
+                                                    } else {
+                                                        errorMessage = "La constante [" + yytext() + "] esta por encima del limite de los enteros.";
+                                                    }
+                                                    throw new InvalidIntegerException(errorMessage);
+                                                } 
+                                            }
+  {FloatConstant}                           { 
+                                                double floatValue = Double.parseDouble(yytext());
+                                                long minValue = (long) -Math.pow(2, BITS_FLOAT - 1); // Límite mínimo para flotante
+                                                long maxValue = (long) Math.pow(2, BITS_FLOAT - 1) - 1; // Límite máximo para flotante
+
+                                                if (floatValue >= minValue && floatValue <= maxValue) {
+                                                    return symbol(ParserSym.FLOAT_CONSTANT, yytext());
+                                                } else {
+                                                    String errorMessage;
+                                                    if (floatValue < minValue) {
+                                                        errorMessage = "La constante [" + yytext() + "] está por debajo del límite de los números flotantes.";
+                                                    } else {
+                                                        errorMessage = "La constante [" + yytext() + "] está por encima del límite de los números flotantes.";
+                                                    }
+                                                    throw new InvalidFloatException(errorMessage);
+                                                } 
+                                            }
 
   /* whitespace */
   {WhiteSpace}                   { /* ignore */ }
