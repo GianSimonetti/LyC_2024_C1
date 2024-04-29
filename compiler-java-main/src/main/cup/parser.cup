@@ -89,6 +89,8 @@ non terminal declaration;
 non terminal varslist;
 non terminal var;
 non terminal vartype;
+non terminal contarprimos;
+non terminal buscoyreemplazo;
 
 // Start Symbol Definition
 //start with sentence;   Cambio el StartSymbol para permitir entradas multilinea
@@ -289,13 +291,33 @@ condition ::= factor LOWER_EQUAL factor {:
 :};
 
 //Agrego temas especiales
-sentence ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
+sentence ::= contarprimos
+{:
+    System.out.println("ContarPrimos");
+:};
+
+contarprimos ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
     System.out.println("ContarPrimos");
 :};
 expression_list ::= expression_list COMMA expression {:
     System.out.println("expression_list = expression_list Comma expression");
 :};
 
-sentence ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET factor COMMA factor COMMA factor CLOSE_BRACKET SEMICOLON{:
+sentence ::= buscoyreemplazo
+{:
     System.out.println("BuscoYReemplazo");
+:};
+
+buscoyreemplazo ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET factor COMMA factor COMMA factor CLOSE_BRACKET SEMICOLON{:
+    System.out.println("BuscoYReemplazo");
+:};
+
+assignment ::= IDENTIFIER:id ASSIG contarprimos
+{:
+    System.out.println(id+" = Contarprimos assignment");
+:};
+
+assignment ::= IDENTIFIER:id ASSIG buscoyreemplazo
+{:
+    System.out.println(id+" = Buscoyreemplazo assignment");
 :};
