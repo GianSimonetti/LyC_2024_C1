@@ -1,8 +1,9 @@
 a := 1
 b := 1
 c := 2
+d := "hola"
 
 si (a > b and c > b)
 {
-    escribir("a es mas grande que b y c es mas grande que b")
+    escribir("a mayor que b y c mayor que b")
 }

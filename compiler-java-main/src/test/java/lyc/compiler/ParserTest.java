@@ -15,24 +15,24 @@ import static com.google.common.truth.Truth.assertThat;
 import static lyc.compiler.Constants.EXAMPLES_ROOT_DIRECTORY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Disabled
+//@Disabled
 public class ParserTest {
-/*
+
     @Test
     public void assignmentWithExpression() throws Exception {
-        compilationSuccessful("c=d*(e-21)/4");
+        compilationSuccessful("c:=d*(e-21)/4");
     }
-*/
+
     @Test
     public void syntaxError() {
         compilationError("1234");
     }
-/*
+    /*
     @Test
     void assignments() throws Exception {
         compilationSuccessful(readFromFile("assignments.txt"));
     }
-*/
+    */
     @Test
     void write() throws Exception {
         compilationSuccessful(readFromFile("write.txt"));
@@ -57,7 +57,7 @@ public class ParserTest {
     void and() throws Exception {
         compilationSuccessful(readFromFile("and.txt"));
     }
-/*
+
     @Test
     void or() throws Exception {
         compilationSuccessful(readFromFile("or.txt"));
@@ -77,7 +77,7 @@ public class ParserTest {
     void whileStatement() throws Exception {
         compilationSuccessful(readFromFile("while.txt"));
     }
-*/
+
 
     private void compilationSuccessful(String input) throws Exception {
         assertThat(scan(input).sym).isEqualTo(ParserSym.EOF);

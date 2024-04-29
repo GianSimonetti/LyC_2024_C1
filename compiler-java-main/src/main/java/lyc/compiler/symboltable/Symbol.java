@@ -28,7 +28,8 @@ public class Symbol {
 
         if(!value.equals("\"\""))
         {
-            final_value = value.substring(1, value.length() - 1);
+            //final_value = value.substring(1, value.length() - 1);
+            final_value = value;
             final_name = "_" + final_value;
             final_length = final_value.length();
         }

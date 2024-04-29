@@ -24,11 +24,11 @@ public class LexerTest {
   private Lexer lexer;
 
 
-//  @Test
-//  public void comment() throws Exception{
-//    scan("/*This is a comment*/");
-//    assertThat(nextToken()).isEqualTo(ParserSym.EOF);
-//  }
+  @Test
+  public void comment() throws Exception{
+    scan("/*This is a comment*/");
+    assertThat(nextToken()).isEqualTo(ParserSym.EOF);
+  }
 
   @Test
   public void invalidStringConstantLength() {
@@ -53,7 +53,7 @@ public class LexerTest {
       nextToken();
     });
   }
-
+/*
   @Test
   public void invalidNegativeIntegerConstantValue() {
     assertThrows(InvalidIntegerException.class, () -> {
@@ -61,7 +61,7 @@ public class LexerTest {
       nextToken();
     });
   }
-
+*/
 
   @Test
   public void assignmentWithExpressions() throws Exception {
@@ -72,12 +72,12 @@ public class LexerTest {
     assertThat(nextToken()).isEqualTo(ParserSym.MULT);
     assertThat(nextToken()).isEqualTo(ParserSym.OPEN_BRACKET);
     assertThat(nextToken()).isEqualTo(ParserSym.IDENTIFIER);
-    //assertThat(nextToken()).isEqualTo(ParserSym.SUB);
+    assertThat(nextToken()).isEqualTo(ParserSym.SUB);
     assertThat(nextToken()).isEqualTo(ParserSym.INTEGER_CONSTANT);
     assertThat(nextToken()).isEqualTo(ParserSym.CLOSE_BRACKET);
     assertThat(nextToken()).isEqualTo(ParserSym.DIV);
     assertThat(nextToken()).isEqualTo(ParserSym.INTEGER_CONSTANT);
-    //assertThat(nextToken()).isEqualTo(ParserSym.EOF);*/
+    assertThat(nextToken()).isEqualTo(ParserSym.EOF);
   }
 
   @Test

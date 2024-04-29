@@ -83,11 +83,13 @@ Open_Square_Bracket = "["
 Close_Square_Bracket = "]"
 
 WhiteSpace = {LineTerminator} | {Identation}
-Comment = "*-" ~ "-*"
+Comment = ("*-" ~ "-*") | ("/*" ~ "*/")
 Identifier = {Letter} ({Letter}|{Digit})*
-IntegerConstant = {Sub}? {Digit}+ | {Digit}+
+//IntegerConstant = {Sub}? {Digit}+ | {Digit}+
+IntegerConstant = {Digit}+
 StringConstant =  (\"({Letter}|{IntegerConstant}|" ")*\") | (\“({Letter}|{IntegerConstant}|" ")*\”)
-FloatConstant = {Sub}? ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
+//FloatConstant = {Sub}? ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
+FloatConstant = ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
 %%
 
 
@@ -166,8 +168,10 @@ FloatConstant = {Sub}? ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
   /* Constants */
   {IntegerConstant}                         { 
                                                 BigInteger intValue = new BigInteger(yytext());
-                                                BigInteger minValue = BigInteger.valueOf(-(1L << (BITS_INT - 1))); // Calcula el valor mínimo permitido
-                                                BigInteger maxValue = BigInteger.valueOf((1L << (BITS_INT - 1)) - 1); // Calcula el valor máximo permitido
+                                                //BigInteger minValue = BigInteger.valueOf(-(1L << (BITS_INT - 1))); // Calcula el valor mínimo permitido
+                                                BigInteger minValue = BigInteger.valueOf(0);
+                                                //BigInteger maxValue = BigInteger.valueOf((1L << (BITS_INT - 1)) - 1); // Calcula el valor máximo permitido
+                                                BigInteger maxValue = BigInteger.valueOf((1L << BITS_INT) - 1); // Calcula el valor máximo permitido
 
                                                 if (intValue.compareTo(minValue) >= 0 && intValue.compareTo(maxValue) <= 0) {
                                                     return symbol(ParserSym.INTEGER_CONSTANT, yytext());
@@ -183,8 +187,10 @@ FloatConstant = {Sub}? ({Digit}+{Point}{Digit}* | {Digit}*{Point}{Digit}+)
                                             }
   {FloatConstant}                           { 
                                                 double floatValue = Double.parseDouble(yytext());
-                                                long minValue = (long) -Math.pow(2, BITS_FLOAT - 1); // Límite mínimo para flotante
-                                                long maxValue = (long) Math.pow(2, BITS_FLOAT - 1) - 1; // Límite máximo para flotante
+                                                //long minValue = (long) -Math.pow(2, BITS_FLOAT - 1); // Límite mínimo para flotante
+                                                long minValue = 0;
+                                                //long maxValue = (long) Math.pow(2, BITS_FLOAT - 1) - 1; // Límite máximo para flotante
+                                                long maxValue = (long) Math.pow(2, BITS_FLOAT) - 1; // Límite máximo para flotante
 
                                                 if (floatValue >= minValue && floatValue <= maxValue) {
                                                     return symbol(ParserSym.FLOAT_CONSTANT, yytext());
