@@ -76,3 +76,19 @@ resultado := buscoYReemplazo(buscar, en, reemplazo);
 
 *- a := 65537 -*
 *- stringlargo := "largo largo largo largo largo largo largo largo largo largo " -*
+
+
+a := 0
+b := 3
+c := 0
+d := 3
+mientras (a < b)
+{
+    mientras (c < d)
+    {
+        c := c + 1
+        escribir("c es menor que d")
+    }
+    escribir("a es menor que b")
+    a := a + 1
+}
