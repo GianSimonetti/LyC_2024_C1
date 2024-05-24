@@ -7,6 +7,7 @@ public class TercetoManager {
 
         private Stack<Integer> pila = new Stack<Integer>();
         private Stack<String> pilaM = new Stack<String>(); //condiciones multiples
+        private Stack<String> expresionesPrimos = new Stack<String>();
 
         public void insertar(String elemento) {
             switch (elemento) {
@@ -45,6 +46,25 @@ public class TercetoManager {
                 case "OR":
                 case "SINGLE":
                     pilaM.add(elemento);
+                    break;
+                case "CONTARPRIMOS":
+                    while (!expresionesPrimos.isEmpty()) {
+                        String valor = expresionesPrimos.pop();
+
+                        // Lógica para verificar si la expresión es primo
+                        lista.add(new Terceto("2", null, null)); // Inicializar el divisor a 2
+                        lista.add(new Terceto(valor, null, null)); // Etiqueta para el bucle
+                        lista.add(new Terceto("DIV", "ant2", "ant2")); // Calcular el módulo de la expresión y 2
+                        lista.add(new Terceto("BNE", null, "#")); // Saltar si el módulo no es igual a 0
+                        lista.add(new Terceto("ADD", "1", null)); // Incrementar el contador de divisores
+                        lista.add(new Terceto("ADD", "1", null)); // Incrementar el divisor
+                        lista.add(new Terceto("LT", null, expresion)); // Comparar si el divisor es menor que la expresión
+                        lista.add(new Terceto("BNE", null, "#LABEL")); // Saltar si el divisor es menor que la expresión
+                        lista.add(new Terceto("EQ", "0", null)); // Verificar si el contador de divisores es igual a 0 (es primo)
+                        lista.add(new Terceto("BNE", null, "#")); // Saltar si no es primo
+                        contadorPrimos++; // Incrementar el contador de primos
+                        pila.add(lista.size()); // Agregar la posición actual de la lista a la pila
+                    }
                     break;
                 default:
                     lista.add(new Terceto(elemento, null, null));
