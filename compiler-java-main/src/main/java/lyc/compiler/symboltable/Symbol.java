@@ -21,7 +21,7 @@ public class Symbol {
 
     public Symbol(String name, String value)
     {
-        this.type = DataType.STRING;
+        this.type = DataType.CTE_STRING;
         int final_length = 0;
         String final_name = "_EMPTY_STRING";
         String final_value = "";
@@ -44,7 +44,7 @@ public class Symbol {
 
     public Symbol(String name, Integer value)
     {
-        this.type = DataType.INTEGER;
+        this.type = DataType.CTE_INTEGER;
         this.name = name;
         this.intValue = value;
 
@@ -55,7 +55,7 @@ public class Symbol {
 
     public Symbol(String name, Double value)
     {
-        this.type = DataType.FLOAT;
+        this.type = DataType.CTE_FLOAT;
         this.name = name;
         this.floatValue = value;
 
@@ -66,12 +66,12 @@ public class Symbol {
 
     private String getValueAsString()
     {
-        if(this.type == DataType.STRING)
+        if(this.type == DataType.CTE_STRING)
         {
             return this.stringValue;
         } else
         {
-            if(this.type == DataType.FLOAT)
+            if(this.type == DataType.CTE_FLOAT)
             {
                 return this.floatValue.toString();
             } else
@@ -83,12 +83,12 @@ public class Symbol {
 
     private String getDataTypeAsString()
     {
-        if(this.type == DataType.STRING)
+        if(this.type == DataType.CTE_STRING)
         {
             return "String";
         } else
         {
-            if(this.type == DataType.FLOAT)
+            if(this.type == DataType.CTE_FLOAT)
             {
                 return "Float";
             } else
