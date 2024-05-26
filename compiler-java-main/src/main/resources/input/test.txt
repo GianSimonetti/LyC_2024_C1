@@ -74,9 +74,10 @@ reemplazo := "reemplazo"
 
 resultado := buscoYReemplazo(buscar, en, reemplazo);
 
-*- a := 65537 -*
-*- stringlargo := "largo largo largo largo largo largo largo largo largo largo " -*
+*- a := 65537 // fuera de rango de representacion de los int -* 
+*- stringlargo := "largo largo largo largo largo largo largo largo largo largo " // la cadena es mas larga que el limite permitido -* 
 
+a := -123
 
 a := 0
 b := 3
