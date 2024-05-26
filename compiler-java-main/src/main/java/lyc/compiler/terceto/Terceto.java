@@ -11,6 +11,7 @@ public class Terceto {
         this.operando2 = operando2;
     }
 
+
     public String getOperacion() {
         return operacion;
     }

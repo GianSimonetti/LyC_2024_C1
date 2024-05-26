@@ -5,6 +5,8 @@ import lyc.compiler.symboltable.*;
 import lyc.compiler.symboltable.Symbol;
 import java.util.List;
 import java.util.ArrayList;
+import lyc.compiler.terceto.Terceto;
+import lyc.compiler.terceto.TercetoManager;
 
 class Parser;
 
@@ -99,6 +101,7 @@ start with program;
 
 program ::= block  {:
     System.out.println("Program End");
+    terceto.mostrar();
  :};
 
 program ::= -1;
@@ -107,10 +110,15 @@ block ::= block sentence{: System.out.println("Block Sentence"); :};
 block ::= sentence{: System.out.println("Block"); :};
 
 sentence ::= assignment {: System.out.println("Sentence"); :};
-assignment ::= IDENTIFIER:id ASSIG expression {: System.out.println(id+" = Assignment"); terceto.insertar(":=");:};
+assignment ::= IDENTIFIER:id ASSIG expression {:
+    System.out.println(id+" = Assignment");
+    terceto.insertar(id.toString());
+    terceto.insertar("ASSIG");
+:};
 assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 {:
-    terceto.insertar(":=");
+    terceto.insertar(id.toString());
+    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_-" + strConstant, -integer);
@@ -118,14 +126,16 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 :};
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
 {:
-    terceto.insertar(":=");
+    terceto.insertar(id.toString());
+    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     System.out.println(id+" = Constant assignment: " + constant);
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
 {:
-    terceto.insertar(":=");
+    terceto.insertar(id.toString());
+    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_-" + strConstant, -float_value);
@@ -133,7 +143,8 @@ assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
 :};
 assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
 {:
-    terceto.insertar(":=");
+    terceto.insertar(id.toString());
+    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
@@ -153,6 +164,7 @@ factor ::= INTEGER_CONSTANT:constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + strConstant);
+    terceto.insertar(strConstant);
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 //Agregado de temas comunes
@@ -166,6 +178,7 @@ data ::= INTEGER_CONSTANT:integer_constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + integer_constant);
+    terceto.insertar(integer_constant.toString());
 :};
 data ::= FLOAT_CONSTANT:float_constant
 {:
@@ -183,6 +196,7 @@ data ::= STRING_CONSTANT:stringConstant
 data ::= IDENTIFIER:id
 {:
     System.out.println(" id: " + id);
+    terceto.insertar(id.toString());
 :};
 sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
     terceto.insertar("Leer");
