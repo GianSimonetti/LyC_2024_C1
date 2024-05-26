@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
 public class TercetoManager {
-        private ArrayList<Terceto> lista = new ArrayList<>();
+        private ArrayList<Terceto> lista = new ArrayList<Terceto>();
 
         private Stack<Integer> pila = new Stack<Integer>();
         private Stack<String> pilaM = new Stack<String>(); //condiciones multiples
@@ -65,6 +65,11 @@ public class TercetoManager {
                         contadorPrimos++; // Incrementar el contador de primos
                         pila.add(lista.size()); // Agregar la posición actual de la lista a la pila
                     }
+                    break;
+                case "ASSIG":
+                    Integer aux1 = lista.size();
+                    Integer aux2 = lista.size()-1;
+                    lista.add(new Terceto(":=", "["+aux1.toString()+"]", "["+aux2.toString()+"]"));
                     break;
                 default:
                     lista.add(new Terceto(elemento, null, null));
