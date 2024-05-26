@@ -151,7 +151,7 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
     System.out.println(id+" = Float constant assignment: " + constant);
 :};
 expression_list ::= expression {: System.out.println("expression_list = expression"); :};
-expression ::= expression PLUS term {: System.out.println("+"); terceto.insertar("+");:};
+expression ::= expression PLUS term {: System.out.println("+"); terceto.insertar("PLUS");:};
 expression ::= expression SUB term {: System.out.println("-"); terceto.insertar("-");:};
 expression ::= term {: System.out.println("Expression = Term"); :};
 term ::= term MULT factor {: System.out.println("*"); terceto.insertar("*");:};
