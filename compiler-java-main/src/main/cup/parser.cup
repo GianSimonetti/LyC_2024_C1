@@ -152,10 +152,10 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
 :};
 expression_list ::= expression {: System.out.println("expression_list = expression"); :};
 expression ::= expression PLUS term {: System.out.println("+"); terceto.insertar("PLUS");:};
-expression ::= expression SUB term {: System.out.println("-"); terceto.insertar("-");:};
+expression ::= expression SUB term {: System.out.println("-"); terceto.insertar("SUB");:};
 expression ::= term {: System.out.println("Expression = Term"); :};
-term ::= term MULT factor {: System.out.println("*"); terceto.insertar("*");:};
-term ::= term DIV factor {: System.out.println("/"); terceto.insertar("/");:};
+term ::= term MULT factor {: System.out.println("*"); terceto.insertar("MULT");:};
+term ::= term DIV factor {: System.out.println("/"); terceto.insertar("DIV");:};
 term ::= factor {: System.out.println("Term = factor"); :};
 factor ::= IDENTIFIER:id  {: System.out.println("Id: " + id); :};
 factor ::= INTEGER_CONSTANT:constant
@@ -267,12 +267,12 @@ sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
     terceto.insertar("UNSTACK");
     System.out.println("if");
 :};
-sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO {:terceto.insertar("BIF");:} OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
     terceto.insertar("UNSTACK");
     System.out.println("if");
 :};
 
-sentence ::= MIENTRAS conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+sentence ::= MIENTRAS {:terceto.insertar("ET");:} conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET {:terceto.insertar("BI");:}{:
     System.out.println("while");
 :};
 

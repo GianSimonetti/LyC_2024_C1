@@ -41,8 +41,15 @@ public class TercetoManager {
                 case "BI":
                     int index3 = pila.pop() - 1;
                     Terceto t3 = lista.get(index3);
-                    lista.set(index3, new Terceto(t3.getOperacion(), t3.getOperando1(), "#" + (lista.size() + 3)));
-                    lista.add(new Terceto(elemento, "#", pila.pop().toString()));
+                    lista.set(index3, new Terceto(t3.getOperacion(), t3.getOperando1(), "#" + (lista.size() + 2)));
+                    lista.add(new Terceto(elemento, null, "#" +pila.pop().toString()));
+                    break;
+                case "BIF":
+                    int indexbif = pila.pop() - 1;
+                    Terceto taux = lista.get(indexbif);
+                    lista.set(indexbif, new Terceto(taux.getOperacion(), taux.getOperando1(), "#" + (lista.size() + 2)));
+                    lista.add(new Terceto("BI", null, "#"));
+                    pila.add(lista.size());
                     break;
                 case "AND":
                 case "OR":
@@ -54,10 +61,25 @@ public class TercetoManager {
                     Integer aux2 = lista.size()-1;
                     lista.add(new Terceto(":=", "["+aux1.toString()+"]", "["+aux2.toString()+"]"));
                     break;
+                case "SUB":
+                    Integer auxSub = lista.size();
+                    Integer aux2Sub= lista.size()-1;
+                    lista.add(new Terceto("-", "["+auxSub.toString()+"]", "["+aux2Sub.toString()+"]"));
+                    break;
                 case "PLUS":
                     Integer auxPlus = lista.size();
                     Integer aux2Plus = lista.size()-1;
                     lista.add(new Terceto("+", "["+auxPlus.toString()+"]", "["+aux2Plus.toString()+"]"));
+                    break;
+                case "DIV":
+                    Integer auxDiv = lista.size();
+                    Integer aux2Div= lista.size()-1;
+                    lista.add(new Terceto("/", "["+auxDiv.toString()+"]", "["+aux2Div.toString()+"]"));
+                    break;
+                case "MULT":
+                    Integer auxMult = lista.size();
+                    Integer aux2Mult= lista.size()-1;
+                    lista.add(new Terceto("*", "["+auxMult.toString()+"]", "["+aux2Mult.toString()+"]"));
                     break;
                 default:
                     lista.add(new Terceto(elemento, null, null));
