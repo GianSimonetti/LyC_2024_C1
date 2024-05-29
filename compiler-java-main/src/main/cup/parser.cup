@@ -157,7 +157,11 @@ expression ::= term {: System.out.println("Expression = Term"); :};
 term ::= term MULT factor {: System.out.println("*"); terceto.insertar("MULT");:};
 term ::= term DIV factor {: System.out.println("/"); terceto.insertar("DIV");:};
 term ::= factor {: System.out.println("Term = factor"); :};
-factor ::= IDENTIFIER:id  {: System.out.println("Id: " + id); :};
+factor ::= IDENTIFIER:id
+{:
+    System.out.println("Id: " + id);
+    terceto.insertar(id.toString());
+:};
 factor ::= INTEGER_CONSTANT:constant
 {:
     String strConstant = constant.toString();

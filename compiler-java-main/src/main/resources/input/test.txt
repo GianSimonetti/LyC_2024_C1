@@ -1,4 +1,6 @@
-if (NOT 2 > 1)
+a:=1
+b:=2
+if (b > a)
 {
     escribir("2 no es mas grande que 1")
 }
