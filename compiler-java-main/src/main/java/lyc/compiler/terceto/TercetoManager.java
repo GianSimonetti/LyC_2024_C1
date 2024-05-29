@@ -81,6 +81,14 @@ public class TercetoManager {
                     Integer aux2Mult= lista.size()-1;
                     lista.add(new Terceto("*", "["+auxMult.toString()+"]", "["+aux2Mult.toString()+"]"));
                     break;
+                case "ESCRIBIR":
+                    Integer auxEsc = lista.size();
+                    lista.add(new Terceto(elemento, "["+auxEsc.toString()+"]", null));
+                    break;
+                case "LEER":
+                    Integer auxLee = lista.size();
+                    lista.add(new Terceto(elemento, "["+auxLee.toString()+"]", null));
+                    break;
                 default:
                     lista.add(new Terceto(elemento, null, null));
                     break;

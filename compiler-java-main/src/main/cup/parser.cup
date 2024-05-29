@@ -169,7 +169,7 @@ factor ::= INTEGER_CONSTANT:constant
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 //Agregado de temas comunes
 sentence ::= ESCRIBIR OPEN_BRACKET data CLOSE_BRACKET {:
-    terceto.insertar("Escribir");
+    //terceto.insertar("Escribir");
     System.out.println("ESCRIBIR:");
 :};
 data ::= INTEGER_CONSTANT:integer_constant
@@ -178,7 +178,9 @@ data ::= INTEGER_CONSTANT:integer_constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + integer_constant);
-    terceto.insertar(integer_constant.toString());
+    //terceto.insertar(integer_constant.toString());
+    terceto.insertar(strConstant);
+    terceto.insertar("ESCRIBIR");
 :};
 data ::= FLOAT_CONSTANT:float_constant
 {:
@@ -186,20 +188,26 @@ data ::= FLOAT_CONSTANT:float_constant
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(" float: " + float_constant);
+    terceto.insertar(strConstant);
+    terceto.insertar("ESCRIBIR");
 :};
 data ::= STRING_CONSTANT:stringConstant
 {:
     String strConstant = stringConstant.toString();
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     System.out.println(" string: " + stringConstant);
+    terceto.insertar(strConstant);
+    terceto.insertar("ESCRIBIR");
 :};
 data ::= IDENTIFIER:id
 {:
     System.out.println(" id: " + id);
     terceto.insertar(id.toString());
+    terceto.insertar("ESCRIBIR");
 :};
 sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
-    terceto.insertar("Leer");
+    terceto.insertar(id.toString());
+    terceto.insertar("LEER");
     System.out.println("LEER: " + id);
 :};
 

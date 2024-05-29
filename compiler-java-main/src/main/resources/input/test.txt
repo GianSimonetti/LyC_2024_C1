@@ -1,9 +1,4 @@
-mientras (3 < 5)
+if (NOT 2 > 1)
 {
-    a := 2 + 1
-
-    mientras (10 < 20)
-    {
-        a := 8
-    }
+    escribir("2 no es mas grande que 1")
 }
