@@ -300,9 +300,7 @@ conditional ::= OPEN_BRACKET condition OR condition CLOSE_BRACKET {:
     terceto.insertar("OR");
     System.out.println("or conditional");
 :};
-conditional ::= OPEN_BRACKET NOT condition CLOSE_BRACKET {:
-    System.out.println("single conditional  not");
-:};
+
 conditional ::= OPEN_BRACKET condition CLOSE_BRACKET {:
     System.out.println("single conditional");
 :};
@@ -311,9 +309,17 @@ condition ::= factor EQUAL factor {:
     terceto.insertar("BNE");
     System.out.println("condition");
 :};
+condition ::= NOT factor EQUAL factor {:
+    terceto.insertar("BEQ");
+    System.out.println("condition");
+:};
 
 condition ::= factor DISTINCT factor {:
     terceto.insertar("BEQ");
+    System.out.println("condition");
+:};
+condition ::= NOT factor DISTINCT factor {:
+    terceto.insertar("BNE");
     System.out.println("condition");
 :};
 
@@ -321,9 +327,17 @@ condition ::= factor HIGHER factor {:
     terceto.insertar("BLE");
     System.out.println("condition");
 :};
+condition ::= NOT factor HIGHER factor {:
+    terceto.insertar("BGT");
+    System.out.println("condition");
+:};
 
 condition ::= factor HIGHER_EQUAL factor {:
     terceto.insertar("BLT");
+    System.out.println("condition");
+:};
+condition ::= NOT factor HIGHER_EQUAL factor {:
+    terceto.insertar("BGE");
     System.out.println("condition");
 :};
 
@@ -331,9 +345,17 @@ condition ::= factor LOWER factor {:
     terceto.insertar("BGE");
     System.out.println("condition");
 :};
+condition ::= NOT factor LOWER factor {:
+    terceto.insertar("BLT");
+    System.out.println("condition");
+:};
 
 condition ::= factor LOWER_EQUAL factor {:
     terceto.insertar("BGT");
+    System.out.println("condition");
+:};
+condition ::= NOT factor LOWER_EQUAL factor {:
+    terceto.insertar("BLE");
     System.out.println("condition");
 :};
 
