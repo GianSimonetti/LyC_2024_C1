@@ -94,6 +94,10 @@ non terminal var;
 non terminal vartype;
 non terminal contarprimos;
 non terminal buscoyreemplazo;
+non terminal subcomponent_list;
+non terminal subcomponent;
+non terminal component;
+
 
 // Start Symbol Definition
 //start with sentence;   Cambio el StartSymbol para permitir entradas multilinea
@@ -150,7 +154,7 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
 :};
-expression_list ::= expression {: System.out.println("expression_list = expression"); :};
+//expression_list ::= expression {: System.out.println("expression_list = expression"); :};
 expression ::= expression PLUS term {: System.out.println("+"); terceto.insertar("PLUS");:};
 expression ::= expression SUB term {: System.out.println("-"); terceto.insertar("SUB");:};
 expression ::= term {: System.out.println("Expression = Term"); :};
@@ -339,12 +343,15 @@ sentence ::= contarprimos
     System.out.println("ContarPrimos");
 :};
 
-contarprimos ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
+contarprimos ::= CONTAR_PRIMOS OPEN_BRACKET expression_list CLOSE_BRACKET{:
     System.out.println("ContarPrimos");
 :};
-expression_list ::= expression_list COMMA expression {:
-    System.out.println("expression_list = expression_list Comma expression");
-:};
+expression_list ::= expression_list COMMA component;
+expression_list ::= component;
+component ::= OPEN_SQUARE_BRACKET subcomponent_list CLOSE_SQUARE_BRACKET;
+subcomponent_list ::= subcomponent_list COMMA subcomponent{: terceto.insertar("LISTADO"); :};
+subcomponent_list ::= subcomponent {: terceto.insertar("LISTADO");:};
+subcomponent ::= expression;
 
 sentence ::= buscoyreemplazo
 {:

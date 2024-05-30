@@ -8,8 +8,12 @@ public class TercetoManager {
         private Stack<Integer> pila = new Stack<Integer>();
         private Stack<String> pilaM = new Stack<String>(); //condiciones multiples
         private Stack<String> expresionesPrimos = new Stack<String>();
+        private int cont = 1;
 
         public void insertar(String elemento) {
+            System.out.println('\n');
+            System.out.println(elemento);
+            System.out.println('\n');
             switch (elemento) {
                 case "UNSTACK":
                     int index = pila.pop() - 1;
@@ -88,6 +92,27 @@ public class TercetoManager {
                 case "LEER":
                     Integer auxLee = lista.size();
                     lista.add(new Terceto(elemento, "["+auxLee.toString()+"]", null));
+                    break;
+                case "LISTADO":
+                    lista.add(new Terceto("_aux"+cont, null, null));
+                    expresionesPrimos.add(("_aux"+cont).toString());
+                    Integer aux1Pr = lista.size();
+                    Integer aux2Pr = lista.size()-1;
+                    lista.add(new Terceto(":=", "["+aux1Pr.toString()+"]", "["+aux2Pr.toString()+"]"));
+                    cont++;
+                    break;
+                case "CONTARPRIMOS":
+                    while (!expresionesPrimos.isEmpty()) {
+                        String expresion = expresionesPrimos.pop();
+                        lista.add(new Terceto(expresion, null, null));
+                        lista.add(new Terceto("CMP", expresion, "1"));
+                        lista.add(new Terceto("BLE", null, "#false_label"));
+
+                        lista.add(new Terceto("CMP", expresion, "2"));
+                        lista.add(new Terceto("BEQ", null, "#true_label"));
+
+
+                    }
                     break;
                 default:
                     lista.add(new Terceto(elemento, null, null));
