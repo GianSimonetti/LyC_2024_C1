@@ -1,5 +1,7 @@
 package lyc.compiler.symboltable;
 
+import java.util.Objects;
+
 public class Symbol {
     private String name;
     private DataType type;
@@ -101,6 +103,22 @@ public class Symbol {
     public String getName()
     {
         return this.name;
+    }
+
+    public Integer getLength()
+    {
+        return Objects.requireNonNullElse(this.length, 0);
+    }
+
+    public String getStringValue()
+    {
+        return Objects.requireNonNullElse(this.stringValue, "");
+    }
+
+    public void setValue(String value)
+    {
+        this.stringValue = value;
+        this.length = value.length();
     }
 
     @Override

@@ -6,7 +6,7 @@ import lyc.compiler.symboltable.Symbol;
 import java.util.List;
 import java.util.ArrayList;
 import lyc.compiler.terceto.Terceto;
-import lyc.compiler.terceto.TercetoManager;
+import lyc.compiler.terceto.IntermediateCodeManager;
 
 class Parser;
 
@@ -14,12 +14,16 @@ action code
 {:
      public SymbolTableManager symbolTableManager = new SymbolTableManager();
      public ArrayList<String> varsList = new ArrayList();
-     public TercetoManager terceto = new TercetoManager();
+     public IntermediateCodeManager intCodeManager = new IntermediateCodeManager();
 :}
 parser code
 {:
     public List<Symbol> getSymbolsList() {
         return action_obj.symbolTableManager.getSymbolsList();
+    }
+
+    public List<Terceto> getTercetosList() {
+        return action_obj.intCodeManager.getTercetosList();
     }
 :}
 
@@ -93,6 +97,7 @@ non terminal varslist;
 non terminal var;
 non terminal vartype;
 non terminal contarprimos;
+// non terminal string_data;
 non terminal buscoyreemplazo;
 
 // Start Symbol Definition
@@ -101,7 +106,7 @@ start with program;
 
 program ::= block  {:
     System.out.println("Program End");
-    terceto.mostrar();
+    intCodeManager.mostrarTercetos();
  :};
 
 program ::= -1;
@@ -112,13 +117,9 @@ block ::= sentence{: System.out.println("Block"); :};
 sentence ::= assignment {: System.out.println("Sentence"); :};
 assignment ::= IDENTIFIER:id ASSIG expression {:
     System.out.println(id+" = Assignment");
-    terceto.insertar(id.toString());
-    terceto.insertar("ASSIG");
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 {:
-    terceto.insertar(id.toString());
-    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_-" + strConstant, -integer);
@@ -126,16 +127,14 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 :};
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
 {:
-    terceto.insertar(id.toString());
-    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
+    String strId = id.toString();
+    symbolTableManager.setVarValue(strId, strConstant);
     System.out.println(id+" = Constant assignment: " + constant);
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
 {:
-    terceto.insertar(id.toString());
-    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_-" + strConstant, -float_value);
@@ -143,19 +142,17 @@ assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
 :};
 assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
 {:
-    terceto.insertar(id.toString());
-    terceto.insertar("ASSIG");
     String strConstant = constant.toString();
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
 :};
 expression_list ::= expression {: System.out.println("expression_list = expression"); :};
-expression ::= expression PLUS term {: System.out.println("+"); terceto.insertar("+");:};
-expression ::= expression SUB term {: System.out.println("-"); terceto.insertar("-");:};
+expression ::= expression PLUS term {: System.out.println("+");:};
+expression ::= expression SUB term {: System.out.println("-");:};
 expression ::= term {: System.out.println("Expression = Term"); :};
-term ::= term MULT factor {: System.out.println("*"); terceto.insertar("*");:};
-term ::= term DIV factor {: System.out.println("/"); terceto.insertar("/");:};
+term ::= term MULT factor {: System.out.println("*");:};
+term ::= term DIV factor {: System.out.println("/");:};
 term ::= factor {: System.out.println("Term = factor"); :};
 factor ::= IDENTIFIER:id  {: System.out.println("Id: " + id); :};
 factor ::= INTEGER_CONSTANT:constant
@@ -164,12 +161,11 @@ factor ::= INTEGER_CONSTANT:constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + strConstant);
-    terceto.insertar(strConstant);
+    intCodeManager.setPunteroTerceto("factor", intCodeManager.crearTerceto(strConstant));
 :};
 factor ::= OPEN_BRACKET expression CLOSE_BRACKET {: System.out.println("Factor = (Expression)"); :};
 //Agregado de temas comunes
 sentence ::= ESCRIBIR OPEN_BRACKET data CLOSE_BRACKET {:
-    terceto.insertar("Escribir");
     System.out.println("ESCRIBIR:");
 :};
 data ::= INTEGER_CONSTANT:integer_constant
@@ -178,7 +174,6 @@ data ::= INTEGER_CONSTANT:integer_constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + integer_constant);
-    terceto.insertar(integer_constant.toString());
 :};
 data ::= FLOAT_CONSTANT:float_constant
 {:
@@ -187,19 +182,27 @@ data ::= FLOAT_CONSTANT:float_constant
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(" float: " + float_constant);
 :};
-data ::= STRING_CONSTANT:stringConstant
-{:
-    String strConstant = stringConstant.toString();
-    symbolTableManager.addSymbol("_" + strConstant, strConstant);
-    System.out.println(" string: " + stringConstant);
-:};
+//data ::= string_data
+//{:
+//    String strConstant = stringConstant.toString();
+//    symbolTableManager.addSymbol("_" + strConstant, strConstant);
+//    System.out.println("data as string data");
+//:};
 data ::= IDENTIFIER:id
 {:
     System.out.println(" id: " + id);
-    terceto.insertar(id.toString());
 :};
+//string_data ::= STRING_CONSTANT:constant
+//{:
+//    String strConstant = constant.toString();
+//    symbolTableManager.addSymbol("_" + strConstant, strConstant);
+//    System.out.println(" string data: " + constant);
+//:};
+//string_data ::= IDENTIFIER:id
+//{:
+//    System.out.println(" string data as id: " + id);
+//:};
 sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
-    terceto.insertar("Leer");
     System.out.println("LEER: " + id);
 :};
 
@@ -264,11 +267,9 @@ vartype ::= STRING
 
 sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
 {:
-    terceto.insertar("UNSTACK");
     System.out.println("if");
 :};
 sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
-    terceto.insertar("UNSTACK");
     System.out.println("if");
 :};
 
@@ -277,11 +278,9 @@ sentence ::= MIENTRAS conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
 :};
 
 conditional ::= OPEN_BRACKET condition AND condition CLOSE_BRACKET {:
-    terceto.insertar("AND");
     System.out.println("and conditional");
 :};
 conditional ::= OPEN_BRACKET condition OR condition CLOSE_BRACKET {:
-    terceto.insertar("OR");
     System.out.println("or conditional");
 :};
 conditional ::= OPEN_BRACKET NOT condition CLOSE_BRACKET {:
@@ -292,32 +291,26 @@ conditional ::= OPEN_BRACKET condition CLOSE_BRACKET {:
 :};
 
 condition ::= factor EQUAL factor {:
-    terceto.insertar("BNE");
     System.out.println("condition");
 :};
 
 condition ::= factor DISTINCT factor {:
-    terceto.insertar("BEQ");
     System.out.println("condition");
 :};
 
 condition ::= factor HIGHER factor {:
-    terceto.insertar("BLE");
     System.out.println("condition");
 :};
 
 condition ::= factor HIGHER_EQUAL factor {:
-    terceto.insertar("BLT");
     System.out.println("condition");
 :};
 
 condition ::= factor LOWER factor {:
-    terceto.insertar("BGE");
     System.out.println("condition");
 :};
 
 condition ::= factor LOWER_EQUAL factor {:
-    terceto.insertar("BGT");
     System.out.println("condition");
 :};
 
@@ -339,7 +332,7 @@ sentence ::= buscoyreemplazo
     System.out.println("BuscoYReemplazo");
 :};
 
-buscoyreemplazo ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET factor COMMA factor COMMA factor CLOSE_BRACKET SEMICOLON{:
+buscoyreemplazo ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET data COMMA data COMMA data CLOSE_BRACKET SEMICOLON{:
     System.out.println("BuscoYReemplazo");
 :};
 

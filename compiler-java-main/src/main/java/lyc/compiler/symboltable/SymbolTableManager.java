@@ -78,6 +78,41 @@ public class SymbolTableManager {
         varsList.clear();
     }
 
+    public void setVarValue(String name, String value)
+    {
+        if(isSymbolInTable(name))
+        {
+            symbolsList.get(getSymbolPos(name)).setValue(value);
+        } else
+        {
+            // throw error, variable inexistente
+        }
+    }
+
+    public Integer getVarLength(String name)
+    {
+        if(isSymbolInTable(name))
+        {
+           return symbolsList.get(getSymbolPos(name)).getLength();
+        } else
+        {
+            // throw error, variable inexistente
+            return -1;
+        }
+    }
+
+    public String getVarValue(String name)
+    {
+        if(isSymbolInTable(name))
+        {
+            return symbolsList.get(getSymbolPos(name)).getStringValue();
+        } else
+        {
+            // throw error, variable inexistente
+            return "";
+        }
+    }
+
     public List<Symbol> getSymbolsList()
     {
         return symbolsList;
