@@ -17,4 +17,12 @@ if(a < b AND c < d)
 if(NOT w < f)
 {
     cad := "F"
+} else
+{
+    cad := "W"
+}
+
+while(x < y)
+{
+    x := y
 }

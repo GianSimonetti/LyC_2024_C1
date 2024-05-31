@@ -461,11 +461,27 @@ sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
     }
     System.out.println("fin if");
 :};
-sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO
+{:
+    Integer numeroTercetoSalto = crearTerceto("BI", "_") + 1;
+    apilarPuntero(numeroTercetoSalto - 1);
+    while(hayCondicionesSuficientes())
+    {
+        actualizarTerceto(desapilarCondSuf(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+    }
+:} OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+    Integer numeroTercetoSalto = getUltimoNumeroTerceto() + 1;
+    actualizarTerceto(desapilarPuntero(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
     System.out.println("if");
 :};
 
-sentence ::= MIENTRAS conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+sentence ::= MIENTRAS {:apilarPuntero(crearTerceto("ET", "_"));:} conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+    Integer numeroTercetoBI = crearTerceto("BI", "#" + desapilarPuntero().toString());
+    Integer numeroTercetoSalto = numeroTercetoBI + 1;
+    while(hayCondicionesSuficientes())
+    {
+        actualizarTerceto(desapilarCondSuf(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+    }
     System.out.println("while");
 :};
 
@@ -486,6 +502,7 @@ conditional ::= OPEN_BRACKET condition {:setPunteroTerceto("conditional", getNum
         System.out.println("or conditional");
     :};
 conditional ::= OPEN_BRACKET NOT condition CLOSE_BRACKET {:
+    apilarCondSuf(topePilaPunteros());
     actualizarTerceto(desapilarPuntero(), CampoTerceto.PRIMER_ELEM, getComparadorInverso(desapilarComparador()));
     System.out.println("single conditional  not");
 :};
