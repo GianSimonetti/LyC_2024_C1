@@ -282,6 +282,9 @@ expression_list ::= expression
     System.out.println("expression_list = expression");
     setPunteroTerceto("expression_list", getNumeroTercetoFromPuntero("expression"));
 :};
+expression_list ::= expression_list COMMA expression {:
+    System.out.println("expression_list = expression_list Comma expression");
+:};
 expression ::= expression PLUS term
 {:
     System.out.println("+");
@@ -592,9 +595,6 @@ sentence ::= contarprimos
 
 contarprimos ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
     System.out.println("ContarPrimos");
-:};
-expression_list ::= expression_list COMMA expression {:
-    System.out.println("expression_list = expression_list Comma expression");
 :};
 
 sentence ::= buscoyreemplazo
