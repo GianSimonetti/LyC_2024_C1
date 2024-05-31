@@ -10,6 +10,17 @@ public class IntermediateCodeManager {
     private Stack<Integer> pilaPunteros = new Stack<Integer>();
     private Stack<String> pilaLexemas = new Stack<String>();
     private Stack<String> pilaComparadores = new Stack<String>();
+    private Stack<Integer> pilaCondicionesSuficientes = new Stack<Integer>();
+    private static final HashMap<String, String> comparadorInverso;
+    static {
+        comparadorInverso = new HashMap<String, String>();
+        comparadorInverso.put("BNE", "BEQ");
+        comparadorInverso.put("BEQ", "BNE");
+        comparadorInverso.put("BLE", "BGT");
+        comparadorInverso.put("BGT", "BLE");
+        comparadorInverso.put("BLT", "BGE");
+        comparadorInverso.put("BGE", "BLT");
+    };
 
     public Integer crearTerceto(String operador, String operando1, String operando2)
     {
@@ -62,6 +73,11 @@ public class IntermediateCodeManager {
         return this.pilaPunteros.pop();
     }
 
+    public Integer topePilaPunteros()
+    {
+        return this.pilaPunteros.peek();
+    }
+
     public void apilarLexema(String lexema)
     {
         this.pilaLexemas.add(lexema);
@@ -80,6 +96,26 @@ public class IntermediateCodeManager {
     public String desapilarComparador()
     {
         return this.pilaComparadores.pop();
+    }
+
+    public void apilarCondSuf(Integer puntero)
+    {
+        this.pilaCondicionesSuficientes.add(puntero);
+    }
+
+    public Integer desapilarCondSuf()
+    {
+        return this.pilaCondicionesSuficientes.pop();
+    }
+
+    public Boolean hayCondicionesSuficientes()
+    {
+        return !this.pilaCondicionesSuficientes.empty();
+    }
+
+    public String getComparadorInverso(String comparador)
+    {
+        return comparadorInverso.get(comparador);
     }
 
     public Integer getUltimoNumeroTerceto()

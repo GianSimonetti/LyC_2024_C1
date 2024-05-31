@@ -98,6 +98,31 @@ parser code
     {
         action_obj.intCodeManager.actualizarTerceto(numeroTerceto, campo, valor);
     }
+
+    public Integer topePilaPunteros()
+    {
+        return action_obj.intCodeManager.topePilaPunteros();
+    }
+
+    public void apilarCondSuf(Integer puntero)
+    {
+        action_obj.intCodeManager.apilarCondSuf(puntero);
+    }
+
+    public Integer desapilarCondSuf()
+    {
+        return action_obj.intCodeManager.desapilarCondSuf();
+    }
+
+    public Boolean hayCondicionesSuficientes()
+    {
+        return action_obj.intCodeManager.hayCondicionesSuficientes();
+    }
+
+    public String getComparadorInverso(String comparador)
+    {
+        return action_obj.intCodeManager.getComparadorInverso(comparador);
+    }
 :}
 
 // Terminals
@@ -430,7 +455,10 @@ sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
 {:
     System.out.println("if");
     Integer numeroTercetoSalto = getUltimoNumeroTerceto() + 1;
-    actualizarTerceto(desapilarPuntero(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+    while(hayCondicionesSuficientes())
+    {
+        actualizarTerceto(desapilarCondSuf(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+    }
     System.out.println("fin if");
 :};
 sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
@@ -441,18 +469,30 @@ sentence ::= MIENTRAS conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
     System.out.println("while");
 :};
 
-conditional ::= OPEN_BRACKET condition AND condition CLOSE_BRACKET {:
-    System.out.println("and conditional");
-:};
-conditional ::= OPEN_BRACKET condition OR condition CLOSE_BRACKET {:
-    System.out.println("or conditional");
-:};
+conditional ::= OPEN_BRACKET condition {:setPunteroTerceto("conditional", getNumeroTercetoFromPuntero("condition"));:}
+    AND condition CLOSE_BRACKET
+    {:
+        apilarCondSuf(desapilarPuntero());
+        apilarCondSuf(desapilarPuntero());
+        System.out.println("and conditional");
+    :};
+conditional ::= OPEN_BRACKET condition {:setPunteroTerceto("conditional", getNumeroTercetoFromPuntero("condition"));:}
+    OR condition CLOSE_BRACKET
+    {:
+        Integer numeroTercetoSegundaCondicion = desapilarPuntero();
+        Integer numeroTercetoPrimeraCondicion = desapilarPuntero();
+        actualizarTerceto(numeroTercetoPrimeraCondicion, CampoTerceto.SEGUNDO_ELEM, "#" + getNumeroTercetoFromPuntero("condition"));
+        apilarCondSuf(numeroTercetoSegundaCondicion);
+        System.out.println("or conditional");
+    :};
 conditional ::= OPEN_BRACKET NOT condition CLOSE_BRACKET {:
+    actualizarTerceto(desapilarPuntero(), CampoTerceto.PRIMER_ELEM, getComparadorInverso(desapilarComparador()));
     System.out.println("single conditional  not");
 :};
 conditional ::= OPEN_BRACKET condition CLOSE_BRACKET {:
     System.out.println("single conditional");
     setPunteroTerceto("conditional", getNumeroTercetoFromPuntero("condition"));
+    apilarCondSuf(desapilarPuntero());
 :};
 
 condition ::= factor
@@ -464,6 +504,7 @@ condition ::= factor
             setPunteroTerceto("condition",
             crearTerceto("CMP", "#" + desapilarPuntero().toString(), getStrNumeroTercetoFromPuntero("factor")));
             apilarPuntero(crearTerceto("BNE", "_"));
+            apilarComparador("BNE");
         :};
 
 condition ::= factor
@@ -474,7 +515,8 @@ condition ::= factor
             System.out.println("condition");
             setPunteroTerceto("condition",
             crearTerceto("CMP", "#" + desapilarPuntero().toString(), getStrNumeroTercetoFromPuntero("factor")));
-            apilarPuntero(crearTerceto("BE", "_"));
+            apilarPuntero(crearTerceto("BEQ", "_"));
+            apilarComparador("BEQ");
         :};
 
 condition ::= factor
@@ -486,6 +528,7 @@ condition ::= factor
             setPunteroTerceto("condition",
             crearTerceto("CMP", "#" + desapilarPuntero().toString(), getStrNumeroTercetoFromPuntero("factor")));
             apilarPuntero(crearTerceto("BLE", "_"));
+            apilarComparador("BLE");
         :};
 
 condition ::= factor
@@ -496,7 +539,8 @@ condition ::= factor
             System.out.println("condition");
             setPunteroTerceto("condition",
             crearTerceto("CMP", "#" + desapilarPuntero().toString(), getStrNumeroTercetoFromPuntero("factor")));
-            apilarPuntero(crearTerceto("BL", "_"));
+            apilarPuntero(crearTerceto("BLT", "_"));
+            apilarComparador("BLT");
         :};
 
 condition ::= factor
@@ -508,6 +552,7 @@ condition ::= factor
             setPunteroTerceto("condition",
             crearTerceto("CMP", "#" + desapilarPuntero().toString(), getStrNumeroTercetoFromPuntero("factor")));
             apilarPuntero(crearTerceto("BGE", "_"));
+            apilarComparador("BGE");
         :};
 
 condition ::= factor
@@ -518,7 +563,8 @@ condition ::= factor
             System.out.println("condition");
             setPunteroTerceto("condition",
             crearTerceto("CMP", "#" + desapilarPuntero().toString(), getStrNumeroTercetoFromPuntero("factor")));
-            apilarPuntero(crearTerceto("BG", "_"));
+            apilarPuntero(crearTerceto("BGT", "_"));
+            apilarComparador("BGT");
         :};
 
 //Agrego temas especiales
