@@ -16,8 +16,6 @@ action code
      public SymbolTableManager symbolTableManager = new SymbolTableManager();
      public ArrayList<String> varsList = new ArrayList();
      public IntermediateCodeManager intCodeManager = new IntermediateCodeManager();
-     public Integer punteroTermAux = null;
-     public Integer punteroExpAux = null;
 :}
 parser code
 {:
@@ -352,6 +350,8 @@ factor ::= OPEN_BRACKET
 //Agregado de temas comunes
 sentence ::= ESCRIBIR OPEN_BRACKET data CLOSE_BRACKET {:
     System.out.println("ESCRIBIR:");
+    setPunteroTerceto("sentence",
+    crearTerceto("ESCRIBIR", getStrNumeroTercetoFromPuntero("data")));
 :};
 data ::= INTEGER_CONSTANT:integer_constant
 {:
@@ -392,6 +392,10 @@ data ::= IDENTIFIER:id
 //    System.out.println(" string data as id: " + id);
 //:};
 sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
+    String strId = id.toString();
+    Integer numeroTercetoId = crearTerceto(strId);
+    setPunteroTerceto("sentence",
+    crearTerceto("LEER", "#" + numeroTercetoId.toString()));
     System.out.println("LEER: " + id);
 :};
 
