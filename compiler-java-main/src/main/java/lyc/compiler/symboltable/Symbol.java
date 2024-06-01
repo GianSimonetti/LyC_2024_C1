@@ -87,15 +87,15 @@ public class Symbol {
     {
         if(this.type == DataType.CTE_STRING)
         {
-            return "String";
+            return "CTE_STRING";
         } else
         {
             if(this.type == DataType.CTE_FLOAT)
             {
-                return "Float";
+                return "CTE_FLOAT";
             } else
             {
-                return "Int";
+                return "CTE_INTEGER";
             }
         }
     }
