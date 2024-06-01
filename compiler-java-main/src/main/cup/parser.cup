@@ -468,19 +468,19 @@ var ::= IDENTIFIER:id
 
 vartype ::= INT
 {:
-    symbolTableManager.addVars(this.varsList, DataType.INTEGER);
+    symbolTableManager.addVars(this.varsList, DataType.CTE_INTEGER);
     System.out.println("Entero");
 :};
 
 vartype ::= FLOAT
 {:
-    symbolTableManager.addVars(this.varsList, DataType.FLOAT);
+    symbolTableManager.addVars(this.varsList, DataType.CTE_FLOAT);
     System.out.println("Flotante");
 :};
 
 vartype ::= STRING
 {:
-    symbolTableManager.addVars(this.varsList, DataType.STRING);
+    symbolTableManager.addVars(this.varsList, DataType.CTE_STRING);
     System.out.println("Cadena");
 :};
 
