@@ -11,6 +11,7 @@ public class IntermediateCodeManager {
     private Stack<String> pilaLexemas = new Stack<String>();
     private Stack<String> pilaComparadores = new Stack<String>();
     private Stack<Integer> pilaCondicionesSuficientes = new Stack<Integer>();
+    private Stack<Integer> pilaExpresionesContarPrimos = new Stack<Integer>();
     private static final HashMap<String, String> comparadorInverso;
     static {
         comparadorInverso = new HashMap<String, String>();
@@ -121,6 +122,16 @@ public class IntermediateCodeManager {
     public Integer getUltimoNumeroTerceto()
     {
         return this.tercetos.size() - 1;
+    }
+
+    public void apilarExpresionContarPrimos(Integer puntero)
+    {
+        this.pilaExpresionesContarPrimos.add(puntero);
+    }
+
+    public Integer desapilarExpresionContarPrimos()
+    {
+        return this.pilaExpresionesContarPrimos.pop();
     }
 
     public void actualizarTerceto(Integer numeroTerceto, CampoTerceto campo, String valor)

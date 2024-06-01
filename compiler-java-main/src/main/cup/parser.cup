@@ -121,6 +121,16 @@ parser code
     {
         return action_obj.intCodeManager.getComparadorInverso(comparador);
     }
+
+    public void apilarExpresionContarPrimos(Integer puntero)
+    {
+        action_obj.intCodeManager.apilarExpresionContarPrimos(puntero);
+    }
+
+    public Integer desapilarExpresionContarPrimos()
+    {
+        return action_obj.intCodeManager.desapilarExpresionContarPrimos();
+    }
 :}
 
 // Terminals
@@ -279,9 +289,21 @@ expression_list ::= expression
 {:
     System.out.println("expression_list = expression");
     setPunteroTerceto("expression_list", getNumeroTercetoFromPuntero("expression"));
+    apilarExpresionContarPrimos(getNumeroTercetoFromPuntero("expression"));
+    Integer numeroTercetoEsPrimo = crearTerceto("ESPRIMO", getStrNumeroTercetoFromPuntero("expression"));
+    crearTerceto("CMP", "#" + numeroTercetoEsPrimo.toString(), "true");
+    Integer numeroTercetoSalto = getUltimoNumeroTerceto() + 3;
+    crearTerceto("BNE", "#" + numeroTercetoSalto.toString());
+    setPunteroTerceto("cant_primos", crearTerceto("+", getStrNumeroTercetoFromPuntero("cant_primos"), "1"));
 :};
 expression_list ::= expression_list COMMA expression {:
     System.out.println("expression_list = expression_list Comma expression");
+    apilarExpresionContarPrimos(getNumeroTercetoFromPuntero("expression"));
+    Integer numeroTercetoEsPrimo = crearTerceto("ESPRIMO", getStrNumeroTercetoFromPuntero("expression"));
+    crearTerceto("CMP", "#" + numeroTercetoEsPrimo.toString(), "true");
+    Integer numeroTercetoSalto = getUltimoNumeroTerceto() + 3;
+    crearTerceto("BNE", "#" + numeroTercetoSalto.toString());
+    setPunteroTerceto("cant_primos", crearTerceto("+", getStrNumeroTercetoFromPuntero("cant_primos"), "1"));
 :};
 expression ::= expression PLUS term
 {:
@@ -597,7 +619,12 @@ sentence ::= contarprimos
     System.out.println("ContarPrimos");
 :};
 
-contarprimos ::= CONTAR_PRIMOS OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
+contarprimos ::= CONTAR_PRIMOS
+{:
+    Integer numeroTercetoCant = crearTerceto("cant_primos");
+    setPunteroTerceto("cant_primos", numeroTercetoCant);
+    crearTerceto(":=", "#" + numeroTercetoCant.toString(), "0");
+:}OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
     System.out.println("ContarPrimos");
 :};
 
@@ -612,6 +639,11 @@ buscoyreemplazo ::= BUSCO_Y_REEMPLAZO OPEN_BRACKET data COMMA data COMMA data CL
 
 assignment ::= IDENTIFIER:id ASSIG contarprimos
 {:
+    String strId = id.toString();
+    Integer numTercetoId = crearTerceto(strId);
+    setPunteroTerceto("assignment",
+        crearTerceto(":=", "#" + numTercetoId.toString(),
+        getStrNumeroTercetoFromPuntero("cant_primos")));
     System.out.println(id+" = Contarprimos assignment");
 :};
 
