@@ -395,12 +395,13 @@ data ::= FLOAT_CONSTANT:float_constant
     System.out.println(" float: " + float_constant);
     setPunteroTerceto("data", crearTerceto(strConstant));
 :};
-//data ::= string_data
-//{:
-//    String strConstant = stringConstant.toString();
-//    symbolTableManager.addSymbol("_" + strConstant, strConstant);
-//    System.out.println("data as string data");
-//:};
+data ::= STRING_CONSTANT:stringConstant
+{:
+    String strConstant = stringConstant.toString();
+    symbolTableManager.addSymbol("_" + strConstant, strConstant);
+    System.out.println("data as string data");
+    setPunteroTerceto("data", crearTerceto(strConstant));
+:};
 data ::= IDENTIFIER:id
 {:
     System.out.println(" id: " + id);
