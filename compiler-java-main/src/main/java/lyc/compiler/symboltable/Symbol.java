@@ -83,6 +83,11 @@ public class Symbol {
         }
     }
 
+    public DataType getType()
+    {
+        return this.type;
+    }
+
     private String getDataTypeAsString()
     {
         if(this.type == DataType.CTE_STRING)
@@ -119,6 +124,17 @@ public class Symbol {
     {
         this.stringValue = value;
         this.length = value.length();
+    }
+
+    public void setValue(Integer value)
+    {
+        this.intValue = value;
+        this.floatValue = Double.valueOf(value);
+    }
+
+    public void setValue(Double value)
+    {
+        this.floatValue = value;
     }
 
     @Override

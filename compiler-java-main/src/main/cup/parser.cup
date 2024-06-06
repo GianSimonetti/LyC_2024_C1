@@ -234,10 +234,11 @@ assignment ::= IDENTIFIER:id ASSIG expression
 {:
     System.out.println(id+" = Assignment");
     String strId = id.toString();
+    symbolTableManager.checkVarIsNumeric(strId);
     Integer numTercetoId = crearTerceto(strId);
     setPunteroTerceto("assignment",
-        crearTerceto(":=", "#" + numTercetoId.toString(),
-        getStrNumeroTercetoFromPuntero("expression")));
+        crearTerceto(":=", getStrNumeroTercetoFromPuntero("expression"),
+        "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 {:
@@ -245,22 +246,24 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
     Integer integer = Integer.valueOf(strConstant);
     integer = (-1) * integer;
     symbolTableManager.addSymbol("_-" + strConstant, integer);
-    System.out.println(id+" = Constant assignment: " + constant);
     String strId = id.toString();
+    symbolTableManager.setVarValue(strId, integer);
+    System.out.println(id+" = Constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(integer.toString());
-    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoId.toString(), "#" + numTercetoConstant.toString()));
+    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
 {:
     String strConstant = constant.toString();
+    Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     String strId = id.toString();
     symbolTableManager.setVarValue(strId, strConstant);
     System.out.println(id+" = Constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(strConstant);
-    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoId.toString(), "#" + numTercetoConstant.toString()));
+    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
 {:
@@ -268,22 +271,24 @@ assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
     Double float_value = Double.valueOf(strConstant);
     float_value = (-1) * float_value;
     symbolTableManager.addSymbol("_-" + strConstant, float_value);
-    System.out.println(id+" = Float constant assignment: " + constant);
     String strId = id.toString();
+    symbolTableManager.setVarValue(strId, float_value);
+    System.out.println(id+" = Float constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(float_value.toString());
-    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoId.toString(), "#" + numTercetoConstant.toString()));
+    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
 {:
     String strConstant = constant.toString();
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
-    System.out.println(id+" = Float constant assignment: " + constant);
     String strId = id.toString();
+    symbolTableManager.setVarValue(strId, float_value);
+    System.out.println(id+" = Float constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(strConstant);
-    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoId.toString(), "#" + numTercetoConstant.toString()));
+    setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 expression_list ::= expression
 {:
@@ -662,8 +667,8 @@ assignment ::= IDENTIFIER:id ASSIG contarprimos
     String strId = id.toString();
     Integer numTercetoId = crearTerceto(strId);
     setPunteroTerceto("assignment",
-    crearTerceto(":=", "#" + numTercetoId.toString(),
-    getStrNumeroTercetoFromPuntero("cant_primos")));
+    crearTerceto(":=", getStrNumeroTercetoFromPuntero("cant_primos"),
+    "#" + numTercetoId.toString()));
     System.out.println(id+" = Contarprimos assignment");
 :};
 

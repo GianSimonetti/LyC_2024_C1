@@ -1,5 +1,8 @@
 package lyc.compiler.symboltable;
 
+import lyc.compiler.model.InvalidVarTypeException;
+import lyc.compiler.model.UnknownVariableException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,38 +81,79 @@ public class SymbolTableManager {
         varsList.clear();
     }
 
-    public void setVarValue(String name, String value)
-    {
+    public void setVarValue(String name, String value) throws UnknownVariableException {
         if(isSymbolInTable(name))
         {
             symbolsList.get(getSymbolPos(name)).setValue(value);
         } else
         {
             // throw error, variable inexistente
+            throw new UnknownVariableException(name);
         }
     }
 
-    public Integer getVarLength(String name)
-    {
+    public void setVarValue(String name, Integer value) throws UnknownVariableException {
+        if(isSymbolInTable(name))
+        {
+            symbolsList.get(getSymbolPos(name)).setValue(value);
+        } else
+        {
+            // throw error, variable inexistente
+            throw new UnknownVariableException(name);
+        }
+    }
+
+    public void setVarValue(String name, Double value) throws UnknownVariableException {
+        if(isSymbolInTable(name))
+        {
+            symbolsList.get(getSymbolPos(name)).setValue(value);
+        } else
+        {
+            // throw error, variable inexistente
+            throw new UnknownVariableException(name);
+        }
+    }
+
+    public Integer getVarLength(String name) throws UnknownVariableException {
         if(isSymbolInTable(name))
         {
            return symbolsList.get(getSymbolPos(name)).getLength();
         } else
         {
             // throw error, variable inexistente
-            return -1;
+            throw new UnknownVariableException(name);
+            //return -1;
         }
     }
 
-    public String getVarValue(String name)
-    {
+    public String getVarValue(String name) throws UnknownVariableException {
         if(isSymbolInTable(name))
         {
             return symbolsList.get(getSymbolPos(name)).getStringValue();
         } else
         {
             // throw error, variable inexistente
-            return "";
+            throw new UnknownVariableException(name);
+            //return "";
+        }
+    }
+
+    private Boolean isVarNumeric(String name) throws UnknownVariableException {
+        if(isSymbolInTable(name))
+        {
+            return symbolsList.get(getSymbolPos(name)).getType() != DataType.CTE_STRING;
+        } else
+        {
+            // throw error, variable inexistente
+            throw new UnknownVariableException(name);
+            //return "";
+        }
+    }
+
+    public void checkVarIsNumeric(String name) throws InvalidVarTypeException, UnknownVariableException {
+        if(!isVarNumeric(name))
+        {
+            throw new InvalidVarTypeException(name);
         }
     }
 

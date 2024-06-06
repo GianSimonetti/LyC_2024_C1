@@ -1,45 +1,9 @@
 *- comentariooooooooo -*
-
-b:=-1
-a:=5+2*(3-4)/5*b
-c:=-0.3
-d:="Hola mundo"
-e:=1.4
-
-if(a < b OR c < d)
-{
-    a := b
+init {
+    a1, b1 : Float
+    variable1 : Int
+    p1, p2, p3 : String
 }
 
-if(a < b AND c < d)
-{
-    a := b
-}
-
-if(NOT w < f)
-{
-    cad := "F"
-} else
-{
-    cad := "W"
-}
-
-while(x < y)
-{
-    x := y
-}
-a := 55
-while(a > 20)
-{
-    a := a - 10
-    escribir("LyC")
-}
-
-x := ContarPrimos([11,b+8,2,55,z*b+7,C])
-
-
-fraseBuscada := "buscar"
-buscarEn := "Hola quiero buscar una palabra y reemplazarla"
-fraseDeReemplazo := "reemplazo"
-
-resultado := buscoYReemplazo(fraseBuscada, buscarEn, fraseDeReemplazo);
+variable1:=-2
+a1:=5+2*(3-4)/5*b
