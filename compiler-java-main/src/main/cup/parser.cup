@@ -256,7 +256,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
 {:
     String strConstant = constant.toString();
-    Integer integer = Integer.valueOf(strConstant);
+    //Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     String strId = id.toString();
     symbolTableManager.setVarValue(strId, strConstant);
