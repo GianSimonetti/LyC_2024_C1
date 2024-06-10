@@ -157,6 +157,13 @@ public class SymbolTableManager {
         }
     }
 
+    public void checkVarExists(String name) throws UnknownVariableException {
+        if(!isSymbolInTable(name))
+        {
+            throw new UnknownVariableException(name);
+        }
+    }
+
     public List<Symbol> getSymbolsList()
     {
         return symbolsList;

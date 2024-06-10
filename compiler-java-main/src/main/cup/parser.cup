@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import lyc.compiler.terceto.Terceto;
 import lyc.compiler.terceto.IntermediateCodeManager;
 import lyc.compiler.terceto.CampoTerceto;
+import lyc.compiler.asm.AsmCodeManager;
 
 class Parser;
 
@@ -16,9 +17,15 @@ action code
      public SymbolTableManager symbolTableManager = new SymbolTableManager();
      public ArrayList<String> varsList = new ArrayList();
      public IntermediateCodeManager intCodeManager = new IntermediateCodeManager();
+     public AsmCodeManager asmCodeManager = new AsmCodeManager();
 :}
 parser code
 {:
+    public String generaAssembler()
+    {
+        return AsmCodeManager.generaAssembler(getTercetosList());
+    }
+
     public List<Symbol> getSymbolsList() {
         return action_obj.symbolTableManager.getSymbolsList();
     }
@@ -256,7 +263,6 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
 {:
     String strConstant = constant.toString();
-    Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     String strId = id.toString();
     symbolTableManager.setVarValue(strId, strConstant);
@@ -356,6 +362,7 @@ factor ::= IDENTIFIER:id
 {:
     System.out.println("Id: " + id);
     String strId = id.toString();
+    symbolTableManager.checkVarExists(strId);
     setPunteroTerceto("factor", crearTerceto(strId));
 :};
 factor ::= INTEGER_CONSTANT:constant
@@ -411,6 +418,7 @@ data ::= IDENTIFIER:id
 {:
     System.out.println(" id: " + id);
     String strId = id.toString();
+    symbolTableManager.checkVarExists(strId);
     setPunteroTerceto("data", crearTerceto(strId));
 :};
 //string_data ::= STRING_CONSTANT:constant
@@ -425,6 +433,7 @@ data ::= IDENTIFIER:id
 //:};
 sentence ::= LEER OPEN_BRACKET IDENTIFIER:id CLOSE_BRACKET {:
     String strId = id.toString();
+    symbolTableManager.checkVarExists(strId);
     Integer numeroTercetoId = crearTerceto(strId);
     setPunteroTerceto("sentence",
     crearTerceto("LEER", "#" + numeroTercetoId.toString()));
@@ -665,6 +674,7 @@ COMMA data CLOSE_BRACKET SEMICOLON{:
 assignment ::= IDENTIFIER:id ASSIG contarprimos
 {:
     String strId = id.toString();
+    symbolTableManager.checkVarExists(strId);
     Integer numTercetoId = crearTerceto(strId);
     setPunteroTerceto("assignment",
     crearTerceto(":=", getStrNumeroTercetoFromPuntero("cant_primos"),
@@ -674,5 +684,7 @@ assignment ::= IDENTIFIER:id ASSIG contarprimos
 
 assignment ::= IDENTIFIER:id ASSIG buscoyreemplazo
 {:
+    String strId = id.toString();
+    symbolTableManager.checkVarExists(strId);
     System.out.println(id+" = Buscoyreemplazo assignment");
 :};

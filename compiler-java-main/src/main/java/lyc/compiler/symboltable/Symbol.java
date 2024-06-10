@@ -49,10 +49,10 @@ public class Symbol {
         this.type = DataType.CTE_INTEGER;
         this.name = name;
         this.intValue = value;
+        this.floatValue = Double.valueOf(value);
 
         this.length = null;
         this.stringValue = null;
-        this.floatValue = null;
     }
 
     public Symbol(String name, Double value)
