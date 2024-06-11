@@ -5,11 +5,20 @@ public class Terceto {
     private String segundoElemento;
     private String tercerElemento;
     private TercetoType tipo;
+    private String resultAux;
 
     public Terceto(String operador, String operando1, String operando2) {
         this.primerElemento = operador;
         this.segundoElemento = operando1;
         this.tercerElemento = operando2;
+        this.tipo = TercetoType.FULL;
+    }
+
+    public Terceto(String operador, String operando1, String operando2, String resultAux) {
+        this.primerElemento = operador;
+        this.segundoElemento = operando1;
+        this.tercerElemento = operando2;
+        this.resultAux = resultAux;
         this.tipo = TercetoType.FULL;
     }
 
@@ -62,6 +71,19 @@ public class Terceto {
         return this.primerElemento;
     }
 
+    private String getOperando1(IntermediateCodeManager intCodeManager)
+    {
+        String operando = this.getOperando1();
+
+        if(operando.startsWith("#") && operando.length() > 1)
+        {
+            Integer numeroTerceto = Integer.valueOf(operando.substring(1));
+            operando = intCodeManager.getOperandoFromNumeroTerceto(numeroTerceto);
+        }
+
+        return operando;
+    }
+
     public void setOperando1(String operando1)
     {
         if(this.tipo != TercetoType.SINGLE_VALUE)
@@ -89,6 +111,28 @@ public class Terceto {
         {
             this.tercerElemento = operando2;
         }
+    }
+
+    public TercetoType getType()
+    {
+        return this.tipo;
+    }
+
+    public String getResultAux()
+    {
+        return this.resultAux;
+    }
+
+    public static String tercetoToAsm(Terceto terceto, IntermediateCodeManager intCodeManager)
+    {
+        String asm = "";
+
+        if(terceto.getType() == TercetoType.SINGLE_VALUE)
+        {
+            asm = "FLD " + terceto.getOperando1(intCodeManager) + "\n";
+        }
+
+        return asm;
     }
 
     @Override

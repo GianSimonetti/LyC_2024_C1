@@ -1,8 +1,5 @@
 package lyc.compiler.terceto;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class IntermediateCodeManager {
     private ArrayList<Terceto> tercetos = new ArrayList<Terceto>();
@@ -12,6 +9,7 @@ public class IntermediateCodeManager {
     private Stack<String> pilaComparadores = new Stack<String>();
     private Stack<Integer> pilaCondicionesSuficientes = new Stack<Integer>();
     private Stack<Integer> pilaExpresionesContarPrimos = new Stack<Integer>();
+    private Queue<String> resultsAux = new LinkedList<String>();
     private static final HashMap<String, String> comparadorInverso;
     static {
         comparadorInverso = new HashMap<String, String>();
@@ -26,7 +24,11 @@ public class IntermediateCodeManager {
     public Integer crearTerceto(String operador, String operando1, String operando2)
     {
         Integer numTerceto = tercetos.size();
-        tercetos.add(new Terceto(operador, operando1, operando2));
+        Integer numAux = resultsAux.size();
+        String strResultNum = numAux.toString();
+        String resultAux = "@aux" + strResultNum;
+        tercetos.add(new Terceto(operador, operando1, operando2, resultAux));
+        resultsAux.add(resultAux);
         return numTerceto;
     }
 
@@ -151,6 +153,16 @@ public class IntermediateCodeManager {
             this.tercetos.get(numeroTerceto).setOperando2(valor);
             return;
         }
+    }
+
+    public String getOperandoFromNumeroTerceto(Integer numeroTerceto)
+    {
+        Terceto terceto = this.tercetos.get(numeroTerceto);
+        if(terceto.getType() == TercetoType.SINGLE_VALUE)
+        {
+            return terceto.getOperando1();
+        }
+        return terceto.getResultAux();
     }
 
     public void mostrarTercetos()
