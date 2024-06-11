@@ -1,5 +1,7 @@
 package lyc.compiler.symboltable;
 
+import lyc.compiler.asm.AsmCodeManager;
+
 import java.util.Objects;
 
 public class Symbol {
@@ -9,6 +11,7 @@ public class Symbol {
     private Double floatValue;
     private String stringValue;
     private Integer length;
+    private Boolean isCte;
 
     public Symbol(String name, DataType type)
     {
@@ -19,6 +22,7 @@ public class Symbol {
         this.length = null;
         this.intValue = null;
         this.floatValue = null;
+        this.isCte = false;
     }
 
     public Symbol(String name, String value)
@@ -39,6 +43,7 @@ public class Symbol {
         this.name = final_name;
         this.stringValue = final_value;
         this.length = final_length;
+        this.isCte = true;
 
         this.intValue = null;
         this.floatValue = null;
@@ -50,6 +55,7 @@ public class Symbol {
         this.name = name;
         this.intValue = value;
         this.floatValue = Double.valueOf(value);
+        this.isCte = true;
 
         this.length = null;
         this.stringValue = null;
@@ -60,6 +66,7 @@ public class Symbol {
         this.type = DataType.CTE_FLOAT;
         this.name = name;
         this.floatValue = value;
+        this.isCte = true;
 
         this.length = null;
         this.stringValue = null;
@@ -81,6 +88,35 @@ public class Symbol {
                 return this.intValue.toString();
             }
         }
+    }
+
+    public String getValueForAsm()
+    {
+        if(isCte())
+        {
+            if(this.type == DataType.CTE_STRING)
+            {
+                return this.stringValue;
+            }
+            return this.floatValue.toString();
+        }
+        return "?";
+    }
+
+    public String getNameForAsm()
+    {
+        if(isCte())
+        {
+            //Quito el _ del principio
+            String name = getName().substring(1);
+            return AsmCodeManager.cteToVarNameCte(name);
+        }
+        return getName();
+    }
+
+    public String getAsmType()
+    {
+        return "dd";
     }
 
     public DataType getType()
@@ -135,6 +171,11 @@ public class Symbol {
     public void setValue(Double value)
     {
         this.floatValue = value;
+    }
+
+    public Boolean isCte()
+    {
+        return this.isCte;
     }
 
     @Override

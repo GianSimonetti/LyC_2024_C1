@@ -257,7 +257,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, integer);
     System.out.println(id+" = Constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(integer.toString());
+    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(integer.toString()));
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
@@ -268,7 +268,7 @@ assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, strConstant);
     System.out.println(id+" = Constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(strConstant);
+    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant));
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
@@ -281,7 +281,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(float_value.toString());
+    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(float_value.toString()));
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
@@ -293,7 +293,7 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(strConstant);
+    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant));
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 expression_list ::= expression
@@ -371,7 +371,7 @@ factor ::= INTEGER_CONSTANT:constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + strConstant);
-    setPunteroTerceto("factor", crearTerceto(strConstant));
+    setPunteroTerceto("factor", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
 :};
 factor ::= OPEN_BRACKET
     {:
@@ -397,7 +397,7 @@ data ::= INTEGER_CONSTANT:integer_constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + integer_constant);
-    setPunteroTerceto("data", crearTerceto(strConstant));
+    setPunteroTerceto("data", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
 :};
 data ::= FLOAT_CONSTANT:float_constant
 {:
@@ -405,14 +405,14 @@ data ::= FLOAT_CONSTANT:float_constant
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(" float: " + float_constant);
-    setPunteroTerceto("data", crearTerceto(strConstant));
+    setPunteroTerceto("data", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
 :};
 data ::= STRING_CONSTANT:stringConstant
 {:
     String strConstant = stringConstant.toString();
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     System.out.println("data as string data");
-    setPunteroTerceto("data", crearTerceto(strConstant));
+    setPunteroTerceto("data", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
 :};
 data ::= IDENTIFIER:id
 {:
