@@ -10,22 +10,45 @@ public class AsmCodeManager {
     public static String generaAssembler(SymbolTableManager symbolTableManager, IntermediateCodeManager intCodeManager)
     {
         String result = "";
-        String header = setAsmHeader();
+        String header = strAsmHeader();
         result = header + "\n";
         result += symbolTableToAsm(symbolTableManager) + "\n";
+        result += strAsmCodeHeader() + "\n";
         String tercetosAsm = "";
         List<Terceto> tercetosList = intCodeManager.getTercetosList();
         for (Terceto terceto : tercetosList)
         {
             tercetosAsm += Terceto.tercetoToAsm(terceto, intCodeManager);
         }
-        result += tercetosAsm;
+        result += tercetosAsm + "\n";
+        result += strAsmEnd();
         return result;
     }
 
-    private static String setAsmHeader()
+    private static String strAsmHeader()
     {
-        return "include macros2.asm\ninclude number.asm\n\n.MODEL SMALL\n.386\n.STACK 200h\n";
+        return "include macros2.asm\n" +
+                "include number.asm\n\n" +
+                ".MODEL SMALL\n" +
+                ".386\n" +
+                ".STACK 200h\n";
+    }
+
+    private static String strAsmCodeHeader()
+    {
+        return ".CODE\n" +
+                "MOV AX,@DATA\n" +
+                "MOV DS,AX\n" +
+                "MOV ES,AX\n" +
+                "FINIT;\n";
+    }
+
+    private static String strAsmEnd()
+    {
+        return "FINAL:\n\t" +
+                    "MOV AX,4c00h\n\t" +
+                    "INT 21h\n" +
+                "END;\n";
     }
 
     private static String symbolTableToAsm(SymbolTableManager symbolTableManager)
