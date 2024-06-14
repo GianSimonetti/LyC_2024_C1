@@ -1,17 +1,36 @@
 package lyc.compiler.asm;
+import lyc.compiler.symboltable.DataType;
 import lyc.compiler.symboltable.SymbolTableManager;
 import lyc.compiler.symboltable.Symbol;
 import lyc.compiler.terceto.IntermediateCodeManager;
 import lyc.compiler.terceto.Terceto;
+
+import java.util.HashMap;
 import java.util.List;
 
 public class AsmCodeManager {
+
+    private static final HashMap<String, String> operadorToAsm;
+    static {
+        operadorToAsm = new HashMap<String, String>();
+        operadorToAsm.put("+", "FADD");
+        operadorToAsm.put("-", "FSUB");
+        operadorToAsm.put("*", "FMUL");
+        operadorToAsm.put("/", "FDIV");
+    };
+
+    public static String operadorToAsm(String operador)
+    {
+        return operadorToAsm.get(operador);
+    }
 
     public static String generaAssembler(SymbolTableManager symbolTableManager, IntermediateCodeManager intCodeManager)
     {
         String result = "";
         String header = strAsmHeader();
         result = header + "\n";
+        symbolTableManager.cargarAuxiliares(intCodeManager.getAuxiliares(DataType.CTE_FLOAT), DataType.CTE_FLOAT);
+        symbolTableManager.cargarAuxiliares(intCodeManager.getAuxiliares(DataType.CTE_STRING), DataType.CTE_STRING);
         result += symbolTableToAsm(symbolTableManager) + "\n";
         result += strAsmCodeHeader() + "\n";
         String tercetosAsm = "";
@@ -29,7 +48,7 @@ public class AsmCodeManager {
     {
         return "include macros2.asm\n" +
                 "include number.asm\n\n" +
-                ".MODEL SMALL\n" +
+                ".MODEL LARGE\n" +
                 ".386\n" +
                 ".STACK 200h\n";
     }
@@ -65,6 +84,7 @@ public class AsmCodeManager {
     public static String cteToVarNameCte(String cte)
     {
         String cteRes = cte.replace(".", "_");
+        cteRes = cteRes.replace("-", "m");
         return "cte_" + cteRes;
     }
 }

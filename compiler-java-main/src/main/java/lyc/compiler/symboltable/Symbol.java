@@ -96,7 +96,7 @@ public class Symbol {
         {
             if(this.type == DataType.CTE_STRING)
             {
-                return this.stringValue;
+                return "\"" + this.stringValue + "\"" + ",'$'";
             }
             return this.floatValue.toString();
         }
@@ -116,6 +116,10 @@ public class Symbol {
 
     public String getAsmType()
     {
+        if(this.type == DataType.CTE_STRING)
+        {
+            return "db";
+        }
         return "dd";
     }
 

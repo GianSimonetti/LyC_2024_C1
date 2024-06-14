@@ -1,4 +1,6 @@
 package lyc.compiler.terceto;
+import lyc.compiler.symboltable.DataType;
+
 import java.util.*;
 
 public class IntermediateCodeManager {
@@ -10,6 +12,7 @@ public class IntermediateCodeManager {
     private Stack<Integer> pilaCondicionesSuficientes = new Stack<Integer>();
     private Stack<Integer> pilaExpresionesContarPrimos = new Stack<Integer>();
     private Queue<String> resultsAux = new LinkedList<String>();
+    private Queue<String> resultsStringAux = new LinkedList<String>();
     private static final HashMap<String, String> comparadorInverso;
     static {
         comparadorInverso = new HashMap<String, String>();
@@ -24,11 +27,16 @@ public class IntermediateCodeManager {
     public Integer crearTerceto(String operador, String operando1, String operando2)
     {
         Integer numTerceto = tercetos.size();
-        Integer numAux = resultsAux.size();
-        String strResultNum = numAux.toString();
-        String resultAux = "@aux" + strResultNum;
-        tercetos.add(new Terceto(operador, operando1, operando2, resultAux));
-        resultsAux.add(resultAux);
+        if(esOperacionMatematica(operador))
+        {
+            Integer numAux = resultsAux.size();
+            String strResultNum = numAux.toString();
+            String resultAux = "@aux" + strResultNum;
+            tercetos.add(new Terceto(operador, operando1, operando2, resultAux));
+            resultsAux.add(resultAux);
+            return numTerceto;
+        }
+        tercetos.add(new Terceto(operador, operando1, operando2));
         return numTerceto;
     }
 
@@ -163,6 +171,21 @@ public class IntermediateCodeManager {
             return terceto.getOperando1();
         }
         return terceto.getResultAux();
+    }
+
+    public static Boolean esOperacionMatematica(String operador)
+    {
+        return
+                operador.equals("+") || operador.equals("-") || operador.equals("*") || operador.equals("/");
+    }
+
+    public Queue<String> getAuxiliares(DataType type)
+    {
+        if(type == DataType.CTE_STRING)
+        {
+            return resultsStringAux;
+        }
+        return resultsAux;
     }
 
     public void mostrarTercetos()

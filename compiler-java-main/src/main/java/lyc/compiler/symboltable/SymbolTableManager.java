@@ -3,10 +3,7 @@ package lyc.compiler.symboltable;
 import lyc.compiler.model.InvalidVarTypeException;
 import lyc.compiler.model.UnknownVariableException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTableManager {
     private List<Symbol> symbolsList;
@@ -161,6 +158,14 @@ public class SymbolTableManager {
         if(!isSymbolInTable(name))
         {
             throw new UnknownVariableException(name);
+        }
+    }
+
+    public void cargarAuxiliares(Queue<String> auxiliares, DataType type)
+    {
+        for(String aux : auxiliares)
+        {
+            this.addSymbol(aux, type);
         }
     }
 

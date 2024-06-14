@@ -1,5 +1,7 @@
 package lyc.compiler.terceto;
 
+import lyc.compiler.asm.AsmCodeManager;
+
 public class Terceto {
     private String primerElemento;
     private String segundoElemento;
@@ -123,6 +125,11 @@ public class Terceto {
         return this.resultAux;
     }
 
+    private String operandoToAsm()
+    {
+        return AsmCodeManager.operadorToAsm(this.getOperacion());
+    }
+
     public static String tercetoToAsm(Terceto terceto, IntermediateCodeManager intCodeManager)
     {
         String asm = "";
@@ -130,6 +137,15 @@ public class Terceto {
         if(terceto.getType() == TercetoType.SINGLE_VALUE)
         {
             asm = "FLD " + terceto.getOperando1(intCodeManager) + "\n";
+        }
+
+        if(terceto.getType() == TercetoType.FULL)
+        {
+            if(IntermediateCodeManager.esOperacionMatematica(terceto.getOperacion()))
+            {
+                asm = terceto.operandoToAsm() + "\n";
+                asm += "FSTP " + terceto.getResultAux() + "\n";
+            }
         }
 
         return asm;

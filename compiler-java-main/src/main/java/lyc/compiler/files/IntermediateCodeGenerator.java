@@ -33,15 +33,18 @@ public class IntermediateCodeGenerator implements FileGenerator {
 
             //fileWriter.write(String.format("%-20s|%-20s|%-20s|%-20s", "NOMBRE", "TIPODATO", "VALOR", "LONGITUD") + "\n");
             fileWriter.write("LISTA DE TERCETOS:" + "\n");
-            tercetosList.forEach(terceto -> {
+            Integer numTerceto = 0;
+            for(Terceto terceto : tercetosList)
+            {
                 try
                 {
-                    fileWriter.write(terceto.toString() + "\n");
+                    fileWriter.write(numTerceto.toString() + ") " + terceto.toString() + "\n");
+                    numTerceto++;
                 } catch (IOException e)
                 {
                     e.printStackTrace();
                 }
-            });
+            }
         } catch (IOException e)
         {
             e.printStackTrace();
