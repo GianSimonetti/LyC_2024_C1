@@ -138,6 +138,21 @@ parser code
     {
         return action_obj.intCodeManager.desapilarExpresionContarPrimos();
     }
+
+    public Boolean esOperacionEntreConstantes(String puntero1, String puntero2)
+    {
+        return action_obj.intCodeManager.esOperacionEntreConstantes(puntero1, puntero2);
+    }
+
+    public void eliminarTerceto(Integer numeroTerceto)
+    {
+        action_obj.intCodeManager.eliminarTerceto(numeroTerceto);
+    }
+
+    public Integer getCte(Integer numeroTerceto)
+    {
+        return action_obj.intCodeManager.getCte(numeroTerceto);
+    }
 :}
 
 // Terminals
@@ -257,7 +272,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, integer);
     System.out.println(id+" = Constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(integer.toString()));
+    Integer numTercetoConstant = crearTerceto(integer.toString());
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
@@ -268,7 +283,7 @@ assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, strConstant);
     System.out.println(id+" = Constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant));
+    Integer numTercetoConstant = crearTerceto(strConstant);
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
@@ -281,7 +296,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(float_value.toString()));
+    Integer numTercetoConstant = crearTerceto(float_value.toString());
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
@@ -293,7 +308,7 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
     //symbolTableManager.setVarValue(strId, float_value);
     System.out.println(id+" = Float constant assignment: " + constant);
     Integer numTercetoId = crearTerceto(strId);
-    Integer numTercetoConstant = crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant));
+    Integer numTercetoConstant = crearTerceto(strConstant);
     setPunteroTerceto("assignment", crearTerceto(":=", "#" + numTercetoConstant.toString(), "#" + numTercetoId.toString()));
 :};
 expression_list ::= expression
@@ -323,16 +338,38 @@ expression_list ::= expression_list COMMA expression {:
 expression ::= expression PLUS term
 {:
     System.out.println("+");
-    setPunteroTerceto("expression",
-    crearTerceto("+", getStrNumeroTercetoFromPuntero("expression"),
-    getStrNumeroTercetoFromPuntero("term")));
+    if(esOperacionEntreConstantes("expression", "term")) //Constant folding
+    {
+        Integer resultado = getCte(getNumeroTercetoFromPuntero("expression")) + getCte(getNumeroTercetoFromPuntero("term"));
+        System.out.println("Resultado = " + resultado);
+        eliminarTerceto(getNumeroTercetoFromPuntero("term"));
+        eliminarTerceto(getNumeroTercetoFromPuntero("expression"));
+        symbolTableManager.addSymbol("_" + resultado.toString(), resultado);
+        setPunteroTerceto("expression", crearTerceto(resultado.toString()));
+    } else
+    {
+        setPunteroTerceto("expression",
+        crearTerceto("+", getStrNumeroTercetoFromPuntero("expression"),
+        getStrNumeroTercetoFromPuntero("term")));
+    }
 :};
 expression ::= expression SUB term
 {:
     System.out.println("-");
-    setPunteroTerceto("expression",
-    crearTerceto("-", getStrNumeroTercetoFromPuntero("expression"),
-    getStrNumeroTercetoFromPuntero("term")));
+    if(esOperacionEntreConstantes("expression", "term")) //Constant folding
+    {
+        Integer resultado = getCte(getNumeroTercetoFromPuntero("expression")) - getCte(getNumeroTercetoFromPuntero("term"));
+        System.out.println("Resultado = " + resultado);
+        eliminarTerceto(getNumeroTercetoFromPuntero("term"));
+        eliminarTerceto(getNumeroTercetoFromPuntero("expression"));
+        symbolTableManager.addSymbol("_" + resultado.toString(), resultado);
+        setPunteroTerceto("expression", crearTerceto(resultado.toString()));
+    } else
+    {
+        setPunteroTerceto("expression",
+        crearTerceto("-", getStrNumeroTercetoFromPuntero("expression"),
+        getStrNumeroTercetoFromPuntero("term")));
+    }
 :};
 expression ::= term
 {:
@@ -342,16 +379,38 @@ expression ::= term
 term ::= term MULT factor
 {:
     System.out.println("*");
-    setPunteroTerceto("term",
-    crearTerceto("*", getStrNumeroTercetoFromPuntero("term"),
-    getStrNumeroTercetoFromPuntero("factor")));
+    if(esOperacionEntreConstantes("term", "factor")) //Constant folding
+    {
+        Integer resultado = getCte(getNumeroTercetoFromPuntero("term")) * getCte(getNumeroTercetoFromPuntero("factor"));
+        System.out.println("Resultado = " + resultado);
+        eliminarTerceto(getNumeroTercetoFromPuntero("factor"));
+        eliminarTerceto(getNumeroTercetoFromPuntero("term"));
+        symbolTableManager.addSymbol("_" + resultado.toString(), resultado);
+        setPunteroTerceto("term", crearTerceto(resultado.toString()));
+    } else
+    {
+        setPunteroTerceto("term",
+        crearTerceto("*", getStrNumeroTercetoFromPuntero("term"),
+        getStrNumeroTercetoFromPuntero("factor")));
+    }
 :};
 term ::= term DIV factor
 {:
     System.out.println("/");
-    setPunteroTerceto("term",
-    crearTerceto("/", getStrNumeroTercetoFromPuntero("term"),
-    getStrNumeroTercetoFromPuntero("factor")));
+    if(esOperacionEntreConstantes("term", "factor")) //Constant folding
+    {
+        Integer resultado = getCte(getNumeroTercetoFromPuntero("term")) / getCte(getNumeroTercetoFromPuntero("factor"));
+        System.out.println("Resultado " + getCte(getNumeroTercetoFromPuntero("term")) + "/" + getCte(getNumeroTercetoFromPuntero("factor")) + "= " + resultado);
+        eliminarTerceto(getNumeroTercetoFromPuntero("factor"));
+        eliminarTerceto(getNumeroTercetoFromPuntero("term"));
+        symbolTableManager.addSymbol("_" + resultado.toString(), resultado);
+        setPunteroTerceto("term", crearTerceto(resultado.toString()));
+    } else
+    {
+        setPunteroTerceto("term",
+        crearTerceto("/", getStrNumeroTercetoFromPuntero("term"),
+        getStrNumeroTercetoFromPuntero("factor")));
+    }
 :};
 term ::= factor
 {:
@@ -371,7 +430,7 @@ factor ::= INTEGER_CONSTANT:constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + strConstant);
-    setPunteroTerceto("factor", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
+    setPunteroTerceto("factor", crearTerceto(strConstant));
 :};
 factor ::= OPEN_BRACKET
     {:
@@ -397,7 +456,7 @@ data ::= INTEGER_CONSTANT:integer_constant
     Integer integer = Integer.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, integer);
     System.out.println(" integer: " + integer_constant);
-    setPunteroTerceto("data", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
+    setPunteroTerceto("data", crearTerceto(strConstant));
 :};
 data ::= FLOAT_CONSTANT:float_constant
 {:
@@ -405,14 +464,14 @@ data ::= FLOAT_CONSTANT:float_constant
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     System.out.println(" float: " + float_constant);
-    setPunteroTerceto("data", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
+    setPunteroTerceto("data", crearTerceto(strConstant));
 :};
 data ::= STRING_CONSTANT:stringConstant
 {:
     String strConstant = stringConstant.toString();
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     System.out.println("data as string data");
-    setPunteroTerceto("data", crearTerceto(AsmCodeManager.cteToVarNameCte(strConstant)));
+    setPunteroTerceto("data", crearTerceto(strConstant));
 :};
 data ::= IDENTIFIER:id
 {:

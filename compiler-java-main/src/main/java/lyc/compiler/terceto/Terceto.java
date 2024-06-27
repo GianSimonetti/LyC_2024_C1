@@ -125,6 +125,17 @@ public class Terceto {
         return this.resultAux;
     }
 
+    public Boolean esCte()
+    {
+        return getType() == TercetoType.SINGLE_VALUE &&
+                getOperando1().matches("-?\\d+(\\.\\d+)?");
+    }
+
+    public Integer getCte()
+    {
+        return Integer.valueOf(getOperando1());
+    }
+
     private String operandoToAsm()
     {
         return AsmCodeManager.operadorToAsm(this.getOperacion());
@@ -136,7 +147,12 @@ public class Terceto {
 
         if(terceto.getType() == TercetoType.SINGLE_VALUE)
         {
-            asm = "FLD " + terceto.getOperando1(intCodeManager) + "\n";
+            String varName = terceto.getOperando1(intCodeManager);
+            if(terceto.esCte())
+            {
+                varName = AsmCodeManager.cteToVarNameCte(varName);
+            }
+            asm = "FLD " + varName + "\n";
         }
 
         if(terceto.getType() == TercetoType.FULL)

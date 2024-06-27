@@ -105,6 +105,7 @@ public class Symbol {
 
     public String getNameForAsm()
     {
+        // Para definir cada variable o cte en el sector de .DATA
         if(isCte())
         {
             //Quito el _ del principio

@@ -163,6 +163,17 @@ public class IntermediateCodeManager {
         }
     }
 
+    public void eliminarTerceto(Integer numeroTerceto)
+    {
+        int numero = numeroTerceto;
+        this.tercetos.remove(numero);
+    }
+
+    public Integer getCte(Integer numeroTerceto)
+    {
+        return getTerceto(numeroTerceto).getCte();
+    }
+
     public String getOperandoFromNumeroTerceto(Integer numeroTerceto)
     {
         Terceto terceto = this.tercetos.get(numeroTerceto);
@@ -177,6 +188,12 @@ public class IntermediateCodeManager {
     {
         return
                 operador.equals("+") || operador.equals("-") || operador.equals("*") || operador.equals("/");
+    }
+
+    public Boolean esOperacionEntreConstantes(String puntero1, String puntero2)
+    {
+        return getTerceto(this.getNumeroTercetoFromPuntero(puntero1)).esCte() &&
+                getTerceto(this.getNumeroTercetoFromPuntero(puntero2)).esCte();
     }
 
     public Queue<String> getAuxiliares(DataType type)
