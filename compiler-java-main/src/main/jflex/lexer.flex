@@ -47,7 +47,7 @@ Digit = [0-9]
 ContarPrimos = "ContarPrimos"
 buscoYReemplazo = "buscoYReemplazo"
 Si = "si" | "if"
-Sino = "sino"
+Sino = "sino" | "else"
 Begin = "begin"
 End = "end"
 For = "for"
@@ -83,7 +83,7 @@ Open_Square_Bracket = "["
 Close_Square_Bracket = "]"
 
 WhiteSpace = {LineTerminator} | {Identation}
-Comment = ("*-" ~ "-*") | ("/*" ~ "*/")
+Comment = ("*-" [a-zA-Z0-9 ]* "-*") | ("/*" [a-zA-Z0-9 ]* "*/")
 Identifier = {Letter} ({Letter}|{Digit})*
 //IntegerConstant = {Sub}? {Digit}+ | {Digit}+
 IntegerConstant = {Digit}+

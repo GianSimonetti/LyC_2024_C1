@@ -1,5 +1,9 @@
 package lyc.compiler.symboltable;
 
+import lyc.compiler.asm.AsmCodeManager;
+
+import java.util.Objects;
+
 public class Symbol {
     private String name;
     private DataType type;
@@ -7,6 +11,7 @@ public class Symbol {
     private Double floatValue;
     private String stringValue;
     private Integer length;
+    private Boolean isCte;
 
     public Symbol(String name, DataType type)
     {
@@ -17,11 +22,12 @@ public class Symbol {
         this.length = null;
         this.intValue = null;
         this.floatValue = null;
+        this.isCte = false;
     }
 
     public Symbol(String name, String value)
     {
-        this.type = DataType.STRING;
+        this.type = DataType.CTE_STRING;
         int final_length = 0;
         String final_name = "_EMPTY_STRING";
         String final_value = "";
@@ -37,6 +43,7 @@ public class Symbol {
         this.name = final_name;
         this.stringValue = final_value;
         this.length = final_length;
+        this.isCte = true;
 
         this.intValue = null;
         this.floatValue = null;
@@ -44,20 +51,22 @@ public class Symbol {
 
     public Symbol(String name, Integer value)
     {
-        this.type = DataType.INTEGER;
+        this.type = DataType.CTE_INTEGER;
         this.name = name;
         this.intValue = value;
+        this.floatValue = Double.valueOf(value);
+        this.isCte = true;
 
         this.length = null;
         this.stringValue = null;
-        this.floatValue = null;
     }
 
     public Symbol(String name, Double value)
     {
-        this.type = DataType.FLOAT;
+        this.type = DataType.CTE_FLOAT;
         this.name = name;
         this.floatValue = value;
+        this.isCte = true;
 
         this.length = null;
         this.stringValue = null;
@@ -66,12 +75,12 @@ public class Symbol {
 
     private String getValueAsString()
     {
-        if(this.type == DataType.STRING)
+        if(this.type == DataType.CTE_STRING)
         {
             return this.stringValue;
         } else
         {
-            if(this.type == DataType.FLOAT)
+            if(this.type == DataType.CTE_FLOAT)
             {
                 return this.floatValue.toString();
             } else
@@ -81,19 +90,58 @@ public class Symbol {
         }
     }
 
+    public String getValueForAsm()
+    {
+        if(isCte())
+        {
+            if(this.type == DataType.CTE_STRING)
+            {
+                return "\"" + this.stringValue + "\"" + ",'$'";
+            }
+            return this.floatValue.toString();
+        }
+        return "?";
+    }
+
+    public String getNameForAsm()
+    {
+        // Para definir cada variable o cte en el sector de .DATA
+        if(isCte())
+        {
+            //Quito el _ del principio
+            String name = getName().substring(1);
+            return AsmCodeManager.cteToVarNameCte(name);
+        }
+        return getName();
+    }
+
+    public String getAsmType()
+    {
+        if(this.type == DataType.CTE_STRING)
+        {
+            return "db";
+        }
+        return "dd";
+    }
+
+    public DataType getType()
+    {
+        return this.type;
+    }
+
     private String getDataTypeAsString()
     {
-        if(this.type == DataType.STRING)
+        if(this.type == DataType.CTE_STRING)
         {
-            return "String";
+            return "CTE_STRING";
         } else
         {
-            if(this.type == DataType.FLOAT)
+            if(this.type == DataType.CTE_FLOAT)
             {
-                return "Float";
+                return "CTE_FLOAT";
             } else
             {
-                return "Int";
+                return "CTE_INTEGER";
             }
         }
     }
@@ -101,6 +149,38 @@ public class Symbol {
     public String getName()
     {
         return this.name;
+    }
+
+    public Integer getLength()
+    {
+        return Objects.requireNonNullElse(this.length, 0);
+    }
+
+    public String getStringValue()
+    {
+        return Objects.requireNonNullElse(this.stringValue, "");
+    }
+
+    public void setValue(String value)
+    {
+        this.stringValue = value;
+        this.length = value.length();
+    }
+
+    public void setValue(Integer value)
+    {
+        this.intValue = value;
+        this.floatValue = Double.valueOf(value);
+    }
+
+    public void setValue(Double value)
+    {
+        this.floatValue = value;
+    }
+
+    public Boolean isCte()
+    {
+        return this.isCte;
     }
 
     @Override
