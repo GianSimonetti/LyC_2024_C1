@@ -190,6 +190,13 @@ public class IntermediateCodeManager {
                 operador.equals("+") || operador.equals("-") || operador.equals("*") || operador.equals("/");
     }
 
+    public static Boolean esOperadorDeSalto(String operador)
+    {
+        return
+                operador.equals("BEQ") || operador.equals("BNE") || operador.equals("BLT") || operador.equals("BLE")
+                        || operador.equals("BGT") || operador.equals("BGE");
+    }
+
     public Boolean esOperacionEntreConstantes(String puntero1, String puntero2)
     {
         return getTerceto(this.getNumeroTercetoFromPuntero(puntero1)).esCte() &&

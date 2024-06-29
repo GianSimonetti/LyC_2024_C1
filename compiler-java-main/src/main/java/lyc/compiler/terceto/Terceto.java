@@ -155,13 +155,35 @@ public class Terceto {
             asm = "FLD " + varName + "\n";
         }
 
+        if(terceto.getType() == TercetoType.SEMI)
+        {
+            if(IntermediateCodeManager.esOperadorDeSalto(terceto.getOperacion()))
+            {
+                asm = terceto.operandoToAsm();
+                asm += " "+terceto.getOperando1()+"\n"; //Habria que ver como recuperar la posicion del salto
+            }
+        }
+
         if(terceto.getType() == TercetoType.FULL)
         {
             if(IntermediateCodeManager.esOperacionMatematica(terceto.getOperacion()))
             {
                 asm = terceto.operandoToAsm() + "\n";
-                asm += "FSTP " + terceto.getResultAux() + "\n";
             }
+
+            if(terceto.getOperacion().equals(":="))
+            {
+                asm += "FSTP " + terceto.getOperando2() + "\n";
+            }
+
+            if(terceto.getOperacion().equals("CMP"))
+            {
+                asm = "FXCH" + "\n";
+                asm += "FCOM" + "\n";
+                asm += "FSTSW ax" + "\n";
+                asm += "SAHF" + "\n";
+            }
+
         }
 
         return asm;

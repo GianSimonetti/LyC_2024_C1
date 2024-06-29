@@ -17,6 +17,12 @@ public class AsmCodeManager {
         operadorToAsm.put("-", "FSUB");
         operadorToAsm.put("*", "FMUL");
         operadorToAsm.put("/", "FDIV");
+        operadorToAsm.put("BEQ", "JE");
+        operadorToAsm.put("BNE", "JNE");
+        operadorToAsm.put("BLT", "JB");
+        operadorToAsm.put("BLE", "JBE");
+        operadorToAsm.put("BGT", "JA");
+        operadorToAsm.put("BGE", "JAE");
     };
 
     public static String operadorToAsm(String operador)
