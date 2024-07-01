@@ -18,6 +18,7 @@ action code
      public ArrayList<String> varsList = new ArrayList();
      public IntermediateCodeManager intCodeManager = new IntermediateCodeManager();
      public AsmCodeManager asmCodeManager = new AsmCodeManager();
+     public String blockCondition = "IF";
 :}
 parser code
 {:
@@ -109,19 +110,34 @@ parser code
         return action_obj.intCodeManager.topePilaPunteros();
     }
 
-    public void apilarCondSuf(Integer puntero)
+    public void apilarCondSufIf(Integer numIf, Integer puntero)
     {
-        action_obj.intCodeManager.apilarCondSuf(puntero);
+        action_obj.intCodeManager.apilarCondSufIf(numIf, puntero);
     }
 
-    public Integer desapilarCondSuf()
+    public Integer desapilarCondSufIf(Integer numIf)
     {
-        return action_obj.intCodeManager.desapilarCondSuf();
+        return action_obj.intCodeManager.desapilarCondSufIf(numIf);
     }
 
-    public Boolean hayCondicionesSuficientes()
+    public Boolean hayCondicionesSuficientesIf(Integer numIf)
     {
-        return action_obj.intCodeManager.hayCondicionesSuficientes();
+        return action_obj.intCodeManager.hayCondicionesSuficientesIf(numIf);
+    }
+
+    public void apilarCondSufWhile(Integer numWhile, Integer puntero)
+    {
+        action_obj.intCodeManager.apilarCondSufWhile(numWhile, puntero);
+    }
+
+    public Integer desapilarCondSufWhile(Integer numWhile)
+    {
+        return action_obj.intCodeManager.desapilarCondSufWhile(numWhile);
+    }
+
+    public Boolean hayCondicionesSuficientesWhile(Integer numWhile)
+    {
+        return action_obj.intCodeManager.hayCondicionesSuficientesWhile(numWhile);
     }
 
     public String getComparadorInverso(String comparador)
@@ -152,6 +168,60 @@ parser code
     public Integer getCte(Integer numeroTerceto)
     {
         return action_obj.intCodeManager.getCte(numeroTerceto);
+    }
+
+    public void apilarIf()
+    {
+        action_obj.intCodeManager.apilarIf();
+    }
+
+    public Integer getNumeroIf()
+    {
+        return action_obj.intCodeManager.getNumeroIf();
+    }
+
+    public String getStrNumeroIf()
+    {
+        return action_obj.intCodeManager.getStrNumeroIf();
+    }
+
+    public Integer desapilarIf()
+    {
+        return action_obj.intCodeManager.desapilarIf();
+    }
+
+    public void apilarWhile()
+    {
+        action_obj.intCodeManager.apilarWhile();
+    }
+
+    public Integer getNumeroWhile()
+    {
+        return action_obj.intCodeManager.getNumeroWhile();
+    }
+
+    public String getStrNumeroWhile()
+    {
+        return action_obj.intCodeManager.getStrNumeroWhile();
+    }
+
+    public Integer desapilarWhile()
+    {
+        return action_obj.intCodeManager.desapilarWhile();
+    }
+
+    public void apilarCondSuf(Integer puntero)
+    {
+        if(action_obj.blockCondition.equals("IF"))
+        {
+            Integer numeroIf = getNumeroIf();
+            apilarCondSufIf(numeroIf, puntero);
+        }
+        if(action_obj.blockCondition.equals("WHILE"))
+        {
+            Integer numeroWhile = getNumeroWhile();
+            apilarCondSufWhile(numeroWhile, puntero);
+        }
     }
 :}
 
@@ -225,6 +295,7 @@ non terminal varslist;
 non terminal var;
 non terminal vartype;
 non terminal contarprimos;
+non terminal if_sentence;
 // non terminal string_data;
 non terminal buscoyreemplazo;
 
@@ -561,39 +632,55 @@ vartype ::= STRING
     symbolTableManager.addVars(this.varsList, DataType.CTE_STRING);
     System.out.println("Cadena");
 :};
+sentence ::= {:apilarIf(); blockCondition = "IF";:} if_sentence;
 
-sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
+if_sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
 {:
     System.out.println("if");
-    Integer numeroTercetoSalto = getUltimoNumeroTerceto() + 1;
-    while(hayCondicionesSuficientes())
+    Integer numeroIf = getNumeroIf();
+    Integer numeroTercetoFinIf = crearTerceto("ET_ENDIF" + getStrNumeroIf());
+    while(hayCondicionesSuficientesIf(numeroIf))
     {
-        actualizarTerceto(desapilarCondSuf(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+        actualizarTerceto(desapilarCondSufIf(numeroIf), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoFinIf.toString());
     }
     System.out.println("fin if");
+    desapilarIf();
 :};
-sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO
+if_sentence ::= SI conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET SINO
 {:
-    Integer numeroTercetoSalto = crearTerceto("BI", "_") + 1;
-    apilarPuntero(numeroTercetoSalto - 1);
-    while(hayCondicionesSuficientes())
+    //Integer numeroTercetoSalto = crearTerceto("BI", "_") + 1;
+    Integer numeroIf = getNumeroIf();
+    Integer numeroTercetoSalto = crearTerceto("BI", "_");
+    Integer numeroTercetoComienzoElse = crearTerceto("ET_BEGINELSE" + getStrNumeroIf());
+    apilarPuntero(numeroTercetoSalto);
+    while(hayCondicionesSuficientesIf(numeroIf))
     {
-        actualizarTerceto(desapilarCondSuf(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+        actualizarTerceto(desapilarCondSufIf(numeroIf), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoComienzoElse.toString());
     }
 :} OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
-    Integer numeroTercetoSalto = getUltimoNumeroTerceto() + 1;
-    actualizarTerceto(desapilarPuntero(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+    Integer numeroTercetoFinElse = crearTerceto("ET_ENDELSE" + getStrNumeroIf());
+    actualizarTerceto(desapilarPuntero(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoFinElse.toString());
     System.out.println("if");
+    desapilarIf();
 :};
 
-sentence ::= MIENTRAS {:apilarPuntero(crearTerceto("ET", "_"));:} conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET{:
+sentence ::= MIENTRAS
+{:
+        apilarWhile();
+        apilarPuntero(crearTerceto("ET_BEGINWHILE" + getStrNumeroWhile()));
+        blockCondition = "WHILE";
+:}
+    conditional OPEN_CURLY_BRACKET block CLOSE_CURLY_BRACKET
+{:
     Integer numeroTercetoBI = crearTerceto("BI", "#" + desapilarPuntero().toString());
-    Integer numeroTercetoSalto = numeroTercetoBI + 1;
-    while(hayCondicionesSuficientes())
+    Integer numeroTercetoSalto = crearTerceto("ET_ENDWHILE" + getStrNumeroWhile());
+    Integer numeroWhile = getNumeroWhile();
+    while(hayCondicionesSuficientesWhile(numeroWhile))
     {
-        actualizarTerceto(desapilarCondSuf(), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
+        actualizarTerceto(desapilarCondSufWhile(numeroWhile), CampoTerceto.SEGUNDO_ELEM, "#" + numeroTercetoSalto.toString());
     }
     System.out.println("while");
+    desapilarWhile();
 :};
 
 conditional ::= OPEN_BRACKET condition {:setPunteroTerceto("conditional", getNumeroTercetoFromPuntero("condition"));:}
