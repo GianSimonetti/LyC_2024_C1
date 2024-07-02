@@ -1,6 +1,6 @@
 init {
     a1, a2, b1 : Float
-    variable1, z, c, b : Int
+    variable1, a, c, b : Int
     p1, p2, p3 : String
 }
 

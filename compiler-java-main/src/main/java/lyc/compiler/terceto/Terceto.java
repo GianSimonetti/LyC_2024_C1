@@ -128,12 +128,18 @@ public class Terceto {
     public Boolean esCte()
     {
         return getType() == TercetoType.SINGLE_VALUE &&
-                getOperando1().matches("-?\\d+(\\.\\d+)?");
+                getOperando1().matches("^-?\\d+(\\.\\d+)?$");
     }
 
     public Integer getCte()
     {
         return Integer.valueOf(getOperando1());
+    }
+
+    public Boolean esEtiqueta()
+    {
+        return getType() == TercetoType.SINGLE_VALUE &&
+                getOperando1().matches("^ET_\\w+$");
     }
 
     private String operandoToAsm()
@@ -147,12 +153,19 @@ public class Terceto {
 
         if(terceto.getType() == TercetoType.SINGLE_VALUE)
         {
-            String varName = terceto.getOperando1(intCodeManager);
+            String operando = terceto.getOperando1(intCodeManager);
             if(terceto.esCte())
             {
-                varName = AsmCodeManager.cteToVarNameCte(varName);
+                operando = AsmCodeManager.cteToVarNameCte(operando);
             }
-            asm = "FLD " + varName + "\n";
+            if(terceto.esEtiqueta())
+            {
+                asm = "\n" + operando + ":" + "\n";
+            }
+            else
+            {
+                asm = "FLD " + operando + "\n";
+            }
         }
 
         if(terceto.getType() == TercetoType.SEMI)
@@ -160,7 +173,7 @@ public class Terceto {
             if(IntermediateCodeManager.esOperadorDeSalto(terceto.getOperacion()))
             {
                 asm = terceto.operandoToAsm();
-                asm += " "+terceto.getOperando1()+"\n"; //Habria que ver como recuperar la posicion del salto
+                asm += " " + terceto.getOperando1(intCodeManager)+ "\n";
             }
         }
 

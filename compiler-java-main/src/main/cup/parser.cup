@@ -340,7 +340,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB INTEGER_CONSTANT:constant
     integer = (-1) * integer;
     symbolTableManager.addSymbol("_-" + strConstant, integer);
     String strId = id.toString();
-    //symbolTableManager.setVarValue(strId, integer);
+    symbolTableManager.checkVarIsInteger(strId);
     System.out.println(id+" = Constant assignment: " + constant);
     //Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(integer.toString());
@@ -352,7 +352,7 @@ assignment ::= IDENTIFIER:id ASSIG STRING_CONSTANT:constant
     String strConstant = constant.toString();
     symbolTableManager.addSymbol("_" + strConstant, strConstant);
     String strId = id.toString();
-    //symbolTableManager.setVarValue(strId, strConstant);
+    symbolTableManager.checkVarIsString(strId);
     System.out.println(id+" = Constant assignment: " + constant);
     //Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(strConstant);
@@ -366,7 +366,7 @@ assignment ::= IDENTIFIER:id ASSIG SUB FLOAT_CONSTANT:constant
     float_value = (-1) * float_value;
     symbolTableManager.addSymbol("_-" + strConstant, float_value);
     String strId = id.toString();
-    //symbolTableManager.setVarValue(strId, float_value);
+    symbolTableManager.checkVarIsFloat(strId);
     System.out.println(id+" = Float constant assignment: " + constant);
     //Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(float_value.toString());
@@ -379,7 +379,7 @@ assignment ::= IDENTIFIER:id ASSIG FLOAT_CONSTANT:constant
     Double float_value = Double.valueOf(strConstant);
     symbolTableManager.addSymbol("_" + strConstant, float_value);
     String strId = id.toString();
-    //symbolTableManager.setVarValue(strId, float_value);
+    symbolTableManager.checkVarIsFloat(strId);
     System.out.println(id+" = Float constant assignment: " + constant);
     //Integer numTercetoId = crearTerceto(strId);
     Integer numTercetoConstant = crearTerceto(strConstant);
@@ -497,6 +497,7 @@ factor ::= IDENTIFIER:id
     System.out.println("Id: " + id);
     String strId = id.toString();
     symbolTableManager.checkVarExists(strId);
+    symbolTableManager.checkVarIsNumeric(strId);
     setPunteroTerceto("factor", crearTerceto(strId));
 :};
 factor ::= INTEGER_CONSTANT:constant
@@ -611,6 +612,7 @@ varslist ::= var
 
 var ::= IDENTIFIER:id
 {:
+    symbolTableManager.checkVarDuplicated(id.toString());
     this.varsList.add(id.toString());
     System.out.println("Variable: " + id);
 :};
@@ -825,6 +827,7 @@ assignment ::= IDENTIFIER:id ASSIG contarprimos
 {:
     String strId = id.toString();
     symbolTableManager.checkVarExists(strId);
+    symbolTableManager.checkVarIsInteger(strId);
     Integer numTercetoId = crearTerceto(strId);
     setPunteroTerceto("assignment",
     crearTerceto(":=", getStrNumeroTercetoFromPuntero("cant_primos"),
@@ -836,5 +839,6 @@ assignment ::= IDENTIFIER:id ASSIG buscoyreemplazo
 {:
     String strId = id.toString();
     symbolTableManager.checkVarExists(strId);
+    symbolTableManager.checkVarIsInteger(strId);
     System.out.println(id+" = Buscoyreemplazo assignment");
 :};
