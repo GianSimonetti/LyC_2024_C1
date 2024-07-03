@@ -175,6 +175,22 @@ public class Terceto {
                 asm = terceto.operandoToAsm();
                 asm += " " + terceto.getOperando1(intCodeManager)+ "\n";
             }
+
+            if(terceto.getOperacion().equals("ESCRIBIR") || terceto.getOperacion().equals("WRITE"))
+            {
+                asm = "FSTP varSalida\n";
+                asm += "PUSH dx\n" + "PUSH ax\n" +
+                        "\n" + "LEA dx, varSalida\n" + "MOV ah, 9\n" + "INT 21h\n" +
+                        "\n" + "POP ax\n" + "POP dx" + "\n";
+            }
+
+            if(terceto.getOperacion().equals("LEER") || terceto.getOperacion().equals("READ"))
+            {
+                asm = "FSTP varEntrada\n";
+                asm += "LEA dx, varEntrada\n" + "MOV ah, 0Ah\n" + "INT 21h\n" +
+                        "\n" + "MOV ah, 4Ch\n" + "INT 21h" + "\n";
+            }
+
         }
 
         if(terceto.getType() == TercetoType.FULL)
