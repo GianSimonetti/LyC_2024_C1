@@ -194,6 +194,7 @@ public class Terceto {
             if(terceto.getOperacion().equals("ESPRIMO"))
             {
                 asm = "esPrimo\n";
+                asm += "FLD " + "1" + "\n";
             }
 
         }
