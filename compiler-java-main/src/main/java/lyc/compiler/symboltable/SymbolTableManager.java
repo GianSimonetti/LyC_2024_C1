@@ -1,12 +1,10 @@
 package lyc.compiler.symboltable;
 
+import lyc.compiler.model.DuplicatedVariableException;
 import lyc.compiler.model.InvalidVarTypeException;
 import lyc.compiler.model.UnknownVariableException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTableManager {
     private List<Symbol> symbolsList;
@@ -154,6 +152,85 @@ public class SymbolTableManager {
         if(!isVarNumeric(name))
         {
             throw new InvalidVarTypeException(name);
+        }
+    }
+
+    private Boolean isVarInteger(String name) throws UnknownVariableException {
+        if(isSymbolInTable(name))
+        {
+            return symbolsList.get(getSymbolPos(name)).getType() == DataType.CTE_INTEGER;
+        } else
+        {
+            // throw error, variable inexistente
+            throw new UnknownVariableException(name);
+            //return "";
+        }
+    }
+
+    public void checkVarIsInteger(String name) throws InvalidVarTypeException, UnknownVariableException {
+        if(!isVarInteger(name))
+        {
+            throw new InvalidVarTypeException(name);
+        }
+    }
+
+    private Boolean isVarString(String name) throws UnknownVariableException {
+        if(isSymbolInTable(name))
+        {
+            return symbolsList.get(getSymbolPos(name)).getType() == DataType.CTE_STRING;
+        } else
+        {
+            // throw error, variable inexistente
+            throw new UnknownVariableException(name);
+            //return "";
+        }
+    }
+
+    public void checkVarIsString(String name) throws InvalidVarTypeException, UnknownVariableException {
+        if(!isVarString(name))
+        {
+            throw new InvalidVarTypeException(name);
+        }
+    }
+
+    private Boolean isVarFloat(String name) throws UnknownVariableException {
+        if(isSymbolInTable(name))
+        {
+            return symbolsList.get(getSymbolPos(name)).getType() == DataType.CTE_FLOAT;
+        } else
+        {
+            // throw error, variable inexistente
+            throw new UnknownVariableException(name);
+            //return "";
+        }
+    }
+
+    public void checkVarIsFloat(String name) throws InvalidVarTypeException, UnknownVariableException {
+        if(!isVarFloat(name))
+        {
+            throw new InvalidVarTypeException(name);
+        }
+    }
+
+    public void checkVarExists(String name) throws UnknownVariableException {
+        if(!isSymbolInTable(name))
+        {
+            throw new UnknownVariableException(name);
+        }
+    }
+
+    public void checkVarDuplicated(String name) throws DuplicatedVariableException {
+        if(isSymbolInTable(name))
+        {
+            throw new DuplicatedVariableException(name);
+        }
+    }
+
+    public void cargarAuxiliares(Queue<String> auxiliares, DataType type)
+    {
+        for(String aux : auxiliares)
+        {
+            this.addSymbol(aux, type);
         }
     }
 
