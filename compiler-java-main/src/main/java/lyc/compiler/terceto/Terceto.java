@@ -191,6 +191,11 @@ public class Terceto {
                         "\n" + "MOV ah, 4Ch\n" + "INT 21h" + "\n";
             }
 
+            if(terceto.getOperacion().equals("ESPRIMO"))
+            {
+                asm = "esPrimo\n";
+            }
+
         }
 
         if(terceto.getType() == TercetoType.FULL)

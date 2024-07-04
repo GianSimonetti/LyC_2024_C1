@@ -4,4 +4,4 @@ init {
     p1, p2, p3 : String
 }
 
-leer(a1)
+a := ContarPrimos([a+1,2])

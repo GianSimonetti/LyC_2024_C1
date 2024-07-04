@@ -795,7 +795,7 @@ contarprimos ::= CONTAR_PRIMOS
     Integer numeroTercetoCant = crearTerceto("cant_primos");
     Integer numeroTercetoCero = crearTerceto("0");
     setPunteroTerceto("cant_primos", numeroTercetoCant);
-    crearTerceto(":=", "#" + numeroTercetoCant.toString(), "#" + numeroTercetoCero.toString());
+    crearTerceto(":=", "#" + numeroTercetoCero.toString(), "cant_primos");
 :}OPEN_BRACKET OPEN_SQUARE_BRACKET expression_list  CLOSE_SQUARE_BRACKET CLOSE_BRACKET{:
     System.out.println("ContarPrimos");
 :};
@@ -828,10 +828,10 @@ assignment ::= IDENTIFIER:id ASSIG contarprimos
     String strId = id.toString();
     symbolTableManager.checkVarExists(strId);
     symbolTableManager.checkVarIsInteger(strId);
-    Integer numTercetoId = crearTerceto(strId);
+    //Integer numTercetoId = crearTerceto(strId);
     setPunteroTerceto("assignment",
-    crearTerceto(":=", getStrNumeroTercetoFromPuntero("cant_primos"),
-    "#" + numTercetoId.toString()));
+    crearTerceto(":=", "cant_primos",
+    strId));
     System.out.println(id+" = Contarprimos assignment");
 :};
 
